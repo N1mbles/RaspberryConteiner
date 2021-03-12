@@ -45,5 +45,7 @@
         public static int RedStart = 95;
         public static int RedEnd = 100;
         #endregion
+
+        public static string connStr = "server=databasetemp.clbmsuilb1nx.eu-west-3.rds.amazonaws.com;Port=3306;user=admin;database=tempmonitor;password=3NqKPVNUCeGQ8gRJ;";
     }
 }

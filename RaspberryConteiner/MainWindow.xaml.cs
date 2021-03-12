@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using RaspberryConteiner.CardControl;
 using System.Linq;
+using MySql.Data.MySqlClient;
 
 namespace RaspberryConteiner
 {
@@ -35,39 +36,29 @@ namespace RaspberryConteiner
         }
         private void InitUsers()
         {
-            //Set current user on load
-
             _CurrentUser.Text = SettingUser.CurrentUser;
 
-            //Add Users on board
-            if (!string.IsNullOrEmpty(SettingUser.User1))
+            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
+            try
             {
-                AddOneUser(SettingUser.User1);
+                conn.Open();
+
+                string sql = "SELECT * FROM tempmonitor.Users;";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    AddOneUser(rdr[1].ToString());
+                }
+                rdr.Close();
             }
-            if (!string.IsNullOrEmpty(SettingUser.User2))
+            catch (Exception ex)
             {
-                AddOneUser(SettingUser.User2);
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
-            if (!string.IsNullOrEmpty(SettingUser.User3))
-            {
-                AddOneUser(SettingUser.User3);
-            }
-            if (!string.IsNullOrEmpty(SettingUser.User4))
-            {
-                AddOneUser(SettingUser.User4);
-            }
-            if (!string.IsNullOrEmpty(SettingUser.User5))
-            {
-                AddOneUser(SettingUser.User5);
-            }
-            if (!string.IsNullOrEmpty(SettingUser.User6))
-            {
-                AddOneUser(SettingUser.User6);
-            }
-            if (!string.IsNullOrEmpty(SettingUser.User7))
-            {
-                AddOneUser(SettingUser.User7);
-            }
+
+            conn.Close();
         }
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -176,7 +167,7 @@ namespace RaspberryConteiner
         {
             if (NameDevice.Length != 0)
             {
-                if (NumberPlatform.Text.Length !=0)
+                if (NumberPlatform.Text.Length != 0)
                 {
                     if (IpAddres.Length != 0)
                     {
