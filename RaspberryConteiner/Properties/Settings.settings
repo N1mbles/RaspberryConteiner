@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RaspberryConteiner.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="UserName1" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Jose</Value>
-    </Setting>
     <Setting Name="PortAddress" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5000</Value>
     </Setting>
@@ -13,30 +10,6 @@
     </Setting>
     <Setting Name="DelayTemp" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
-    </Setting>
-    <Setting Name="UserName2" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Domingo</Value>
-    </Setting>
-    <Setting Name="UserName3" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Angel</Value>
-    </Setting>
-    <Setting Name="UserName4" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Anna</Value>
-    </Setting>
-    <Setting Name="UserName5" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="UserName6" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="UserName7" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="UserName8" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="NumbersUser" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="CurrentUser" Type="System.String" Scope="User">
       <Value Profile="(Default)">Jose</Value>

@@ -153,8 +153,6 @@
       <DependentUpon>Exit.xaml</DependentUpon>
     </Compile>
     <Compile Include="Parameters.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="SettingUser.cs" />
     <Page Include="CardControl\Device.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

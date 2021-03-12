@@ -36,7 +36,7 @@ namespace RaspberryConteiner
         }
         private void InitUsers()
         {
-            _CurrentUser.Text = SettingUser.CurrentUser;
+            _CurrentUser.Text = Parameters.CurrentUser;
 
             MySqlConnection conn = new MySqlConnection(Parameters.connStr);
             try
@@ -222,20 +222,35 @@ namespace RaspberryConteiner
         {
             if (NameOfUser.Text.Length != 0)
             {
-                UserCard users = new UserCard
-                {
-                    Width = Convert.ToInt32("400"),
-                    Height = Convert.ToInt32("390"),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Margin = new Thickness(10, 20, 0, 0),
-                    NameofUser = NameOfUser.Text
-                };
-                CardsUsers.Children.Add(users); // Add to the stack panel.
+                MySqlConnection conn = new MySqlConnection(Parameters.connStr);
 
-                AddNewUser.Visibility = Visibility.Hidden;
-                ListDevice.Visibility = Visibility.Visible;
-                System.Windows.Forms.MessageBox.Show("New User Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                try
+                {
+                    conn.Open();
+
+                    string sql = "INSERT INTO `tempmonitor`.`Users` (`Name`) VALUES ('"+ NameOfUser.Text+"');";
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+
+                    AddOneUser(NameOfUser.Text);
+
+                    AddNewUser.Visibility = Visibility.Hidden;
+                    ListDevice.Visibility = Visibility.Visible;
+                    System.Windows.Forms.MessageBox.Show("New User Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
+
+                conn.Close();
+
+
+
+
+
+
             }
             else
             {
@@ -271,7 +286,7 @@ namespace RaspberryConteiner
         {
             if (!string.IsNullOrEmpty(CcurrentUser))
             {
-                SettingUser.CurrentUser = CcurrentUser;
+                Parameters.CurrentUser = CcurrentUser;
             }
         }
         #region Methods
@@ -283,8 +298,8 @@ namespace RaspberryConteiner
         {
             UserCard users = new UserCard
             {
-                Width = Convert.ToInt32("300"),
-                Height = Convert.ToInt32("300"),
+                Width = Parameters.UserWidth,
+                Height = Parameters.UserHeight,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(10, 20, 0, 0),
@@ -294,10 +309,6 @@ namespace RaspberryConteiner
                                             //  SaveAddedUser(name);
         }
 
-        private void SaveAddedUser(string name)
-        {
-            SettingUser.AddUser(name);
-        }
         /// <summary>
         /// Add new devices
         /// </summary>
