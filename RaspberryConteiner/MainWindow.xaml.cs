@@ -34,8 +34,12 @@ namespace RaspberryConteiner
             // Init users
             InitUsers();
         }
+        /// <summary>
+        /// Initialization Users from Db on load window
+        /// </summary>
         private void InitUsers()
         {
+            // Show current user in system
             _CurrentUser.Text = Parameters.CurrentUser;
 
             MySqlConnection conn = new MySqlConnection(Parameters.connStr);
@@ -235,7 +239,7 @@ namespace RaspberryConteiner
                     AddOneUser(NameOfUser.Text);
 
                     AddNewUser.Visibility = Visibility.Hidden;
-                    ListDevice.Visibility = Visibility.Visible;
+                    ListOfUsers.Visibility = Visibility.Visible;
                     System.Windows.Forms.MessageBox.Show("New User Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
 
                 }
