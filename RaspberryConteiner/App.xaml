@@ -1,0 +1,11 @@
+﻿<Application x:Class="RaspberryConteiner.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:RaspberryConteiner"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <BitmapImage x:Key="man" UriSource="\Avatars\009-man.png"></BitmapImage>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

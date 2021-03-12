@@ -1,0 +1,19 @@
+﻿<Window x:Class="RaspberryConteiner.Exit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RaspberryConteiner"
+        mc:Ignorable="d"
+        Title="Exit" Height="144" Width="229.067" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="NoResize" Background="#FFDADADA" Foreground="{x:Null}">
+    <Grid >
+        <Border CornerRadius="15" Background="#FFCBC7C7" BorderBrush="Black" BorderThickness="1">
+        </Border>
+        <Label Content="Do you want to leave?" HorizontalAlignment="Left" Margin="2,20,0,0" VerticalAlignment="Top" Foreground="Black" FontFamily="./#9651" FontSize="22" Background="{x:Null}"/>
+        <Button Content="Yes" HorizontalAlignment="Left" Margin="34,97,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" FontFamily="Segoe UI Semibold" FontSize="14"/>
+
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="129,97,0,0" Background="#FF25BED4" VerticalAlignment="Top" Width="75" Click="Button_Click_1" FontFamily="Segoe UI Semibold" FontSize="14" Foreground="White" />
+        <Button Content="R" HorizontalAlignment="Left" Margin="211,6,0,0" VerticalAlignment="Top" Width="11"  Height="18" Click="Button_Click_2"/>
+
+    </Grid>
+</Window>

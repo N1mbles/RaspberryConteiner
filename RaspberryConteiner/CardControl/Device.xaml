@@ -1,0 +1,100 @@
+﻿<UserControl x:Class="RaspberryConteiner.CardControl.Device"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RaspberryConteiner.CardControl"
+             mc:Ignorable="d" 
+       d:DesignHeight="180" d:DesignWidth="400" Foreground="{x:Null}">
+
+    <UserControl.Resources>
+        <Color x:Key="MyGreen">#FF59B032</Color>
+
+        <Style x:Key="UCButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="19"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </UserControl.Resources>
+
+
+    <Grid Background="#FFFAFAFA" x:Name="Card">
+        <Border x:Name="BlurCard">
+
+            <Grid x:Name="BlurGridInsade">
+                <!-- Head-->
+                <Rectangle Fill="Black" HorizontalAlignment="Left" Height="30" Stroke="Black" Width="400" Margin="0,0,0,150"/>
+                <DockPanel Margin="0,0,0,150">
+                    <Image DockPanel.Dock="Right" Width="30"   Source="UserControlImage/close.png" Stretch="Fill" MouseDown="Image_MouseDown" Margin="0,1,3,1" />
+
+                    <!--Block status -->
+                    <Image DockPanel.Dock="Left" x:Name="StatusImage" Source="UserControlImage/cicleRed.png" Width="25" Stretch="Fill" Margin="5,5,0,4.6"/>
+                    <Label DockPanel.Dock="Left" x:Name="Status" Content="NOT CONNECTED" Foreground="#FFEBEBEB" FontSize="13" FontFamily="./#9651" Margin="0,4,0,0" Width="114"/>
+
+                    <!-- Name device-->
+                    <!--<Border BorderBrush="Black" Height="17" Margin="142,6,76,157">-->
+                        <TextBlock x:Name="NameDevice" Text="" HorizontalAlignment="Center"  FontFamily="./#9651" FontSize="14" Foreground="White" TextTrimming="WordEllipsis" Height="17" Margin="10,0"/>
+                    <!--</Border>-->
+
+                </DockPanel>
+
+                <!-- Name platform-->
+                <Label Content="№" HorizontalAlignment="Left" Margin="114,28,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16"/>
+                <Label x:Name="NumberDevice" Content="" HorizontalAlignment="Left" Margin="141,28,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16"/>
+
+
+                <!-- Block(middle) Current temp -->
+                <Rectangle x:Name="CurrentTemp" HorizontalAlignment="Left" Height="64" Margin="125,66,0,50" VerticalAlignment="Center" Width="148" RadiusX="13" RadiusY="13" ToolTip="Current temperature">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="#FF59B032"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Label Content="°C" HorizontalAlignment="Left" Margin="246,64,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651" FontSize="16" Height="26"/>
+                <Label x:Name="LocalTemp" HorizontalContentAlignment="Center" Content="" HorizontalAlignment="Left" Margin="171,70,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651" FontSize="44"/>
+
+                <!-- Block(left side) Started temp -->
+                <Rectangle HorizontalAlignment="Left" Height="47" Margin="8,77,0,0" VerticalAlignment="Top" Width="104" RadiusX="13" RadiusY="13" Fill="Black" ToolTip="Temperature value during device initialization" MouseDown="Rectangle_MouseDown"/>
+                <Label Content="°C" HorizontalAlignment="Left" Margin="89,75,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651"  MouseDown="Label_MouseDown" Height="22" Width="23"/>
+                <Label x:Name="InitTemp" Content="" HorizontalAlignment="Left" Margin="42,86,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651" FontSize="18" Height="29" Width="33"/>
+
+
+                <!-- Block(right side) The maximum temp is set -->
+                <Rectangle Fill="Black" HorizontalAlignment="Left" Height="47" Margin="283,77,0,0" VerticalAlignment="Top" Width="109" RadiusX="13" RadiusY="13" MouseDown="Rectangle_MouseDown_1" />
+                <Label Content="°C" HorizontalAlignment="Left" Margin="366,75,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651" />
+                <TextBox x:Name="SetTemp" Text="" HorizontalAlignment="Left" Height="20" Margin="322,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="32" Background="{x:Null}" Foreground="White" FontFamily="./#9651" FontSize="18" BorderBrush="{x:Null}" SelectionBrush="#FF59B032" ToolTip="Setting the maximum temperature value" PreviewTextInput="OnPreviewTextInput" KeyDown="SetTemp_KeyDown" />
+
+                <!-- Footer-->
+                <Grid x:Name="Footer" Margin="0,150,0,0">
+
+                    <Rectangle Fill="Black" HorizontalAlignment="Left" Height="30" Stroke="Black" Width="400" Margin="0"/>
+                    <DockPanel >
+                        <!-- Timer-->
+                        <Image DockPanel.Dock="Left" Margin="5,4.3,5,4.3" Source="UserControlImage/clock.png" Width="20" />
+                        <Label Content="UPTIME:"  Margin="0,3,0,3.6" FontFamily="./#9651" Foreground="#FFEBEBEB" FontSize="13" Width="58" />
+                        <Label x:Name="LiveTime" Content=""  Margin="0,3,0,3.6" FontFamily="./#9651" Foreground="#FFEBEBEB" FontSize="14" />
+
+                        <!-- Refresh-->
+                        <!--<Image HorizontalAlignment="Left" Height="19" Margin="329,155,0,0" VerticalAlignment="Top" Width="17" Source="UserControlImage/refresh.png" MouseDown="Image_MouseDown_1" ToolTip="Refresh device"/>-->
+                        <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource UCButtonStyle}" Margin="0,4,3,4.3"  Width="22" Height="Auto" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" Click="Button_Click"  >
+                            <Image Source="UserControlImage/refresh.png"  Height="21" Width="21" />
+                        </Button>
+
+                    </DockPanel>
+                </Grid>
+            </Grid>
+        </Border>
+
+
+        <Grid x:Name="Confirmation" Visibility="Hidden">
+            <Border Margin="38,22,40,28" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="3" >
+                <!--<Label Content="Are you sure you want remove?" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="20" Margin="31,5,31.4,90.4"/>-->
+            </Border>
+            <Label x:Name="title" Content="Are you sure you want remove?" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="22" Margin="41,29,37,104" Width="322"/>
+            <Button Content="Remove"  Margin="242,101,75,48" BorderBrush="Black" Background="{x:Null}" BorderThickness="5,1,1,1" Click="Button_Click_1" FontFamily="Segoe UI Semibold" FontSize="16"/>
+            <Button Content="Cancel"  Margin="84,101,233,48" BorderBrush="Black" Background="#FF25BED4" BorderThickness="1" Click="Button_Click_2" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" />
+
+        </Grid>
+
+    </Grid>
+
+</UserControl>
