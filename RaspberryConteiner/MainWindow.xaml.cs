@@ -33,6 +33,8 @@ namespace RaspberryConteiner
             Delay.Text = Parameters.Delay.ToString();
             // Init users
             InitUsers();
+            // Init Devices
+            InitDevices();
         }
         /// <summary>
         /// Initialization Users from Db on load window
@@ -54,6 +56,31 @@ namespace RaspberryConteiner
                 while (rdr.Read())
                 {
                     AddOneUser(rdr[1].ToString());
+                }
+                rdr.Close();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            }
+
+            conn.Close();
+        }
+
+        private void InitDevices()
+        {
+            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
+            try
+            {
+                conn.Open();
+
+                string sql = "SELECT * FROM tempmonitor.Devices;";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                while (rdr.Read())
+                {
+                    AddOneDevice(rdr[1].ToString(),rdr[2].ToString());
                 }
                 rdr.Close();
             }
@@ -232,7 +259,7 @@ namespace RaspberryConteiner
                 {
                     conn.Open();
 
-                    string sql = "INSERT INTO `tempmonitor`.`Users` (`Name`) VALUES ('"+ NameOfUser.Text+"');";
+                    var sql = "INSERT INTO `tempmonitor`.`Users` (`Name`) VALUES ('" + NameOfUser.Text + "');";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -249,12 +276,6 @@ namespace RaspberryConteiner
                 }
 
                 conn.Close();
-
-
-
-
-
-
             }
             else
             {
@@ -265,7 +286,7 @@ namespace RaspberryConteiner
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             AddNewUser.Visibility = Visibility.Hidden;
-            ListDevice.Visibility = Visibility.Visible;
+            ListOfUsers.Visibility = Visibility.Visible;
         }
         /// <summary>
         /// Show settings
@@ -317,7 +338,7 @@ namespace RaspberryConteiner
         /// Add new devices
         /// </summary>
         /// <param name="count"> Count of users</param>
-        private void AddOneDevice()
+        private void AddOneDevice(string nameOfDevice, string nameOfPlatform)
         {
             Device device = new Device
             {
@@ -325,8 +346,9 @@ namespace RaspberryConteiner
                 Height = Convert.ToInt32("180"),
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
-                Margin = new Thickness(11, 20, 0, 0)
-
+                Margin = new Thickness(11, 20, 0, 0),
+                NameofDevice = nameOfDevice,
+                Nplatform = nameOfPlatform
             };
             Cards.Children.Add(device); // Add to the stack panel.            
         }
