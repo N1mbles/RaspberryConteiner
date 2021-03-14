@@ -49,8 +49,7 @@ namespace RaspberryConteiner
             {
                 conn.Open();
 
-                string sql = "SELECT * FROM tempmonitor2.Users;";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Users;", conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
                 while (rdr.Read())
@@ -194,9 +193,9 @@ namespace RaspberryConteiner
             {
                 if (NumberPlatform.Text.Length != 0)
                 {
-                    MySqlConnection conn = new MySqlConnection(Parameters.connStr);
                     try
                     {
+                        MySqlConnection conn = new MySqlConnection(Parameters.connStr);
                         conn.Open();
 
                         var sql = "INSERT INTO `tempmonitor2`.`Devices` (`Name`, `NPlatform`) VALUES ('" + NameDevice + "', '" + NumberPlatform.Text + "'); ";
@@ -204,12 +203,13 @@ namespace RaspberryConteiner
                         MySqlDataReader rdr = cmd.ExecuteReader();
 
                         AddOneDevice(NameDevice, NumberPlatform.Text);
+
+                        conn.Close();
                     }
                     catch (Exception ex)
                     {
                         System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                     }
-                    conn.Close();
 
                     System.Windows.Forms.MessageBox.Show("New Device Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                     AddNewItem.Visibility = Visibility.Hidden;

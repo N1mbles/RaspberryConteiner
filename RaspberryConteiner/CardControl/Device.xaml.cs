@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using MySql.Data.MySqlClient;
-using Rasberry.Api;
 using Rasberry.Api.Excel;
 
 namespace RaspberryConteiner.CardControl
@@ -43,13 +42,11 @@ namespace RaspberryConteiner.CardControl
         public int MaxTemp
         {
             get { return iMaxTemp; }
-            set { iMaxTemp = value; }
-        }
-        private string _url;
-        public string Url
-        {
-            get { return _url; }
-            set { _url = "http://" + value + ":" + Parameters.Port + "/"; }
+            set 
+            {
+                iMaxTemp = value;
+                SetTemp.Text = value.ToString();
+            }
         }
 
         public string Nplatform
@@ -71,15 +68,8 @@ namespace RaspberryConteiner.CardControl
         /// <param name="e"></param>
         private void Image_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-            if (_url.Length != 0)
-            {
-                statusConnect = true;
-                StartGettingTemp();
-            }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("Unknown address, Re-create the device.", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
+            statusConnect = true;
+            StartGettingTemp();
         }
         private int time = 0;
         void Timer_Tick(object sender, EventArgs e)
@@ -144,36 +134,25 @@ namespace RaspberryConteiner.CardControl
 
             Confirmation.Visibility = System.Windows.Visibility.Visible;
         }
+        // Only one click for start
         private bool clickOne = true;
         private void Rectangle_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (_url.Length != 0)
+            if (clickOne)
             {
-                if (clickOne)
-                {
-                    clickOne = false;
-                    StartGettingTemp();
-                }
+                clickOne = false;
+                StartGettingTemp();
             }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("Unknown address, Re-create the device.", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
+
         }
         private void Label_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (_url.Length != 0)
+            if (clickOne)
             {
-                if (clickOne)
-                {
-                    clickOne = false;
-                    StartGettingTemp();
-                }
+                clickOne = false;
+                StartGettingTemp();
             }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("Unknown address, Re-create the device.", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
+
         }
         private void Rectangle_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
@@ -201,62 +180,61 @@ namespace RaspberryConteiner.CardControl
                 iMaxTemp = int.Parse(SetTemp.Text);
             }
         }
-        public async void GetTemperatureFromServer()
-        {
-            MainWindow main = new MainWindow();
-            GetTemp client = new GetTemp();
+        //public async void GetTemperatureFromServer()
+        //{
+        //    GetTemp client = new GetTemp();
 
-            DispatcherTimer LiveTime = new DispatcherTimer
-            {
-                Interval = new TimeSpan(0, 0, 1)
-            };
-            LiveTime.Tick += Timer_Tick;
-            LiveTime.Start();
+        //    DispatcherTimer LiveTime = new DispatcherTimer
+        //    {
+        //        Interval = new TimeSpan(0, 0, 1)
+        //    };
+        //    LiveTime.Tick += Timer_Tick;
+        //    LiveTime.Start();
 
-            while (true)
-            {
-                try
-                {
-                    var retTemp = await client.GetTemperature(_url);
-                    // If answer != 404 execute code
-                    if (Convert.ToInt32(retTemp) != 404)
-                    {
-                        if (initTemperature)
-                        {
-                            InitTemp.Content = Convert.ToInt32(retTemp).ToString();//Show on initialization temp
-                            initTemperature = false;
-                        }
-                        SetStatusDevice(true);
+        //    while (true)
+        //    {
+        //        try
+        //        {
+        //            var retTemp = await client.GetTemperature(_url);
+        //            // If answer != 404 execute code
+        //            if (Convert.ToInt32(retTemp) != 404)
+        //            {
+        //                if (initTemperature)
+        //                {
+        //                    InitTemp.Content = Convert.ToInt32(retTemp).ToString();//Show on initialization temp
+        //                    initTemperature = false;
+        //                }
+        //                SetStatusDevice(true);
 
-                        LocalTemp.Content = Convert.ToInt32(retTemp).ToString(); //Show on board temp
+        //                LocalTemp.Content = Convert.ToInt32(retTemp).ToString(); //Show on board temp
 
-                        if (Convert.ToInt32(retTemp) >= iMaxTemp)
-                        {
-                            LiveTime.Stop();
-                        }
+        //                if (Convert.ToInt32(retTemp) >= iMaxTemp)
+        //                {
+        //                    LiveTime.Stop();
+        //                }
 
-                        tempereture.Add(new TempData(NameofDevice, retTemp));
+        //                // tempereture.Add(new TempData(NameofDevice, retTemp));
 
-                        SetBackgroundTemp(retTemp);
-                        await Task.Delay(1000 * Parameters.Delay);
-                    }
-                    // else We dont have connection, we throw error
-                }
-                catch (Exception ex)
-                {
-                    statusConnect = false;
-                    initTemperature = true; //
-                    SetStatusDevice(false);
-                    System.Windows.Forms.MessageBox.Show("Device: " + NameofDevice + " - Error \n" + ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                    break;
-                }
-            }
-            if (!statusConnect)
-            {
-                LiveTime.Stop();
-            }
-        }
-        private void StartGettingTemp()
+        //                SetBackgroundTemp(retTemp);
+        //                await Task.Delay(1000 * Parameters.Delay);
+        //            }
+        //            // else We dont have connection, we throw error
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            statusConnect = false;
+        //            initTemperature = true; //
+        //            SetStatusDevice(false);
+        //            System.Windows.Forms.MessageBox.Show("Device: " + NameofDevice + " - Error \n" + ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+        //            break;
+        //        }
+        //    }
+        //    if (!statusConnect)
+        //    {
+        //        LiveTime.Stop();
+        //    }
+        //}
+        private async void StartGettingTemp()
         {
             if (SetTemp.Text.Length == 0)
             {
@@ -264,8 +242,63 @@ namespace RaspberryConteiner.CardControl
             }
             else
             {
-                GetTemperatureFromServer();
+                try
+                {
+                    MySqlConnection conn = new MySqlConnection(Parameters.connStr);
+                    await conn.OpenAsync();
+                    MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices;", conn);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+
+                    while (await rdr.ReadAsync())
+                    {
+                        DispatcherTimer LiveTime = new DispatcherTimer
+                        {
+                            Interval = new TimeSpan(0, 0, 1)
+                        };
+                        LiveTime.Tick += Timer_Tick;
+                        LiveTime.Start();
+
+
+                        // Set value on board
+                        SetValueDB(int.Parse(rdr[4].ToString()), int.Parse(rdr[5].ToString()));
+
+                        //
+                        if (initTemperature)
+                        {
+                            InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp
+                            initTemperature = false;
+                        }
+
+                        //
+                        SetStatusDevice(true);
+
+                        //
+                        if (int.Parse(rdr[4].ToString()) >= iMaxTemp)
+                        {
+                            LiveTime.Stop();
+                        }
+
+                        SetBackgroundTemp(int.Parse(rdr[4].ToString()));
+                        await Task.Delay(1000 * Parameters.Delay);
+
+                    }
+
+                    await conn.CloseAsync();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
+
+                // GetTemperatureFromServer();
             }
+        }
+
+        private void SetValueDB(int _currentTemp, int _maxTemp)
+        {
+            CurrentTemperature = _currentTemp;
+
+            MaxTemp = _maxTemp;
         }
 
         private void SetBackgroundTemp(double temperature)
@@ -335,17 +368,14 @@ namespace RaspberryConteiner.CardControl
             }
         }
 
+        /// <summary>
+        /// Reset value
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (_url.Length != 0)
-            {
-                statusConnect = true;
-                StartGettingTemp();
-            }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("Unknown address, Re-create the device.", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
+            System.Windows.Forms.MessageBox.Show("Test");
         }
         /// <summary>
         /// Remove device(this)
@@ -359,8 +389,7 @@ namespace RaspberryConteiner.CardControl
             {
                 conn.Open();
 
-                var sql = "DELETE FROM Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlCommand cmd = new MySqlCommand("DELETE FROM Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ", conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
                 (this.Parent as WrapPanel).Children.Remove(this);
@@ -371,8 +400,6 @@ namespace RaspberryConteiner.CardControl
                 System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
             conn.Close();
-
-
 
         }
         /// <summary>
