@@ -42,7 +42,7 @@ namespace RaspberryConteiner.CardControl
         public int MaxTemp
         {
             get { return iMaxTemp; }
-            set 
+            set
             {
                 iMaxTemp = value;
                 SetTemp.Text = value.ToString();
@@ -242,54 +242,57 @@ namespace RaspberryConteiner.CardControl
             }
             else
             {
-                try
+                DispatcherTimer LiveTime = new DispatcherTimer
                 {
-                    MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-                    await conn.OpenAsync();
-                    MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices;", conn);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    Interval = new TimeSpan(0, 0, 1)
+                };
+                LiveTime.Tick += Timer_Tick;
+                LiveTime.Start();
 
-                    while (await rdr.ReadAsync())
+                while (true)
+                {
+                    try
                     {
-                        DispatcherTimer LiveTime = new DispatcherTimer
-                        {
-                            Interval = new TimeSpan(0, 0, 1)
-                        };
-                        LiveTime.Tick += Timer_Tick;
-                        LiveTime.Start();
+                        MySqlConnection conn = new MySqlConnection(Parameters.connStr);
 
+                        await conn.OpenAsync();
+                        MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ", conn);
+                        MySqlDataReader rdr = (MySqlDataReader)await cmd.ExecuteReaderAsync();
 
-                        // Set value on board
-                        SetValueDB(int.Parse(rdr[4].ToString()), int.Parse(rdr[5].ToString()));
+                        while (await rdr.ReadAsync())
+                        {       
+                            // Set value on board
+                            SetValueDB(int.Parse(rdr[4].ToString()), int.Parse(rdr[5].ToString()));
 
-                        //
-                        if (initTemperature)
-                        {
-                            InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp
-                            initTemperature = false;
+                            //
+                            if (initTemperature)
+                            {
+                                InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp
+                                //MySqlCommand cmd2 = new MySqlCommand("INSERT INTO `tempmonitor2`.`Devices` (`InitTemp`) VALUES ('"+ InitTemp.Content + "');", conn);
+
+                                // cmd2.ExecuteReader();
+                                initTemperature = false;
+                            }
+
+                            //
+                            SetStatusDevice(true);
+
+                            //
+                            if (int.Parse(rdr[4].ToString()) >= iMaxTemp)
+                            {
+                                LiveTime.Stop();
+                            }
+
+                            SetBackgroundTemp(int.Parse(rdr[4].ToString()));
                         }
-
-                        //
-                        SetStatusDevice(true);
-
-                        //
-                        if (int.Parse(rdr[4].ToString()) >= iMaxTemp)
-                        {
-                            LiveTime.Stop();
-                        }
-
-                        SetBackgroundTemp(int.Parse(rdr[4].ToString()));
-                        await Task.Delay(1000 * Parameters.Delay);
-
+                        await conn.CloseAsync();
                     }
-
-                    await conn.CloseAsync();
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    }
+                    await Task.Delay(1000 * Parameters.Delay);
                 }
-                catch (Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                }
-
                 // GetTemperatureFromServer();
             }
         }

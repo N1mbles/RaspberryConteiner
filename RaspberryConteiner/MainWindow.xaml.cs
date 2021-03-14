@@ -79,7 +79,7 @@ namespace RaspberryConteiner
 
                 while (rdr.Read())
                 {
-                    AddOneDevice(rdr[1].ToString(), rdr[2].ToString());
+                    AddOneDevice(rdr[1].ToString(), rdr[2].ToString(), int.Parse(rdr[5].ToString())); ;
                 }
                 rdr.Close();
             }
@@ -328,7 +328,7 @@ namespace RaspberryConteiner
         /// Add new devices
         /// </summary>
         /// <param name="count"> Count of users</param>
-        private void AddOneDevice(string nameOfDevice, string nameOfPlatform)
+        private void AddOneDevice(string nameOfDevice, string nameOfPlatform, int maxTemp = 80)
         {
             Device device = new Device
             {
@@ -338,7 +338,8 @@ namespace RaspberryConteiner
                 VerticalAlignment = VerticalAlignment.Top,
                 Margin = new Thickness(11, 20, 0, 0),
                 NameofDevice = nameOfDevice,
-                Nplatform = nameOfPlatform
+                Nplatform = nameOfPlatform,
+                MaxTemp = maxTemp
             };
             Cards.Children.Add(device); // Add to the stack panel.            
         }
