@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using MySql.Data.MySqlClient;
 using Rasberry.Api;
 using Rasberry.Api.Excel;
 
@@ -135,6 +136,7 @@ namespace RaspberryConteiner.CardControl
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //(Parent as WrapPanel).Children.Remove(this);
+
             System.Windows.Media.Effects.BlurEffect blurEffect = new System.Windows.Media.Effects.BlurEffect();
             blurEffect.KernelType = System.Windows.Media.Effects.KernelType.Gaussian;
             blurEffect.Radius = 7;
@@ -228,7 +230,7 @@ namespace RaspberryConteiner.CardControl
 
                         LocalTemp.Content = Convert.ToInt32(retTemp).ToString(); //Show on board temp
 
-                        if(Convert.ToInt32(retTemp)>= iMaxTemp)
+                        if (Convert.ToInt32(retTemp) >= iMaxTemp)
                         {
                             LiveTime.Stop();
                         }
@@ -352,7 +354,26 @@ namespace RaspberryConteiner.CardControl
         /// <param name="e"></param>
         private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
         {
-            (this.Parent as WrapPanel).Children.Remove(this);
+            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
+            try
+            {
+                conn.Open();
+
+                var sql = "DELETE FROM Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                (this.Parent as WrapPanel).Children.Remove(this);
+
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            }
+            conn.Close();
+
+
+
         }
         /// <summary>
         /// Cancel removing
