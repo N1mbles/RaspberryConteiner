@@ -90,6 +90,8 @@
                 <!--<Label Content="Are you sure you want remove?" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="20" Margin="31,5,31.4,90.4"/>-->
             </Border>
             <Label x:Name="title" Content="Are you sure you want remove?" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="22" Margin="41,29,37,104" Width="322"/>
+            <Label x:Name="Description" Content="This device will be deleted." HorizontalAlignment="Center" VerticalAlignment="Center"  FontFamily="./#9651" FontSize="17" Margin="97,60,97,92"/>
+            
             <Button Content="Remove"  Margin="242,101,75,48" BorderBrush="Black" Background="{x:Null}" BorderThickness="5,1,1,1" Click="Button_Click_1" FontFamily="Segoe UI Semibold" FontSize="16"/>
             <Button Content="Cancel"  Margin="84,101,233,48" BorderBrush="Black" Background="#FF25BED4" BorderThickness="1" Click="Button_Click_2" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" />
 
