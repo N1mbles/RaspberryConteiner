@@ -49,7 +49,7 @@ namespace RaspberryConteiner
             {
                 conn.Open();
 
-                string sql = "SELECT * FROM tempmonitor.Users;";
+                string sql = "SELECT * FROM tempmonitor2.Users;";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -74,13 +74,13 @@ namespace RaspberryConteiner
             {
                 conn.Open();
 
-                string sql = "SELECT * FROM tempmonitor.Devices;";
+                string sql = "SELECT * FROM tempmonitor2.Devices;";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
                 while (rdr.Read())
                 {
-                    AddOneDevice(rdr[1].ToString(),rdr[2].ToString());
+                    AddOneDevice(rdr[1].ToString(), rdr[2].ToString());
                 }
                 rdr.Close();
             }
@@ -156,7 +156,6 @@ namespace RaspberryConteiner
             {
                 ListDevice.Visibility = Visibility.Hidden;
                 AddNewItem.Visibility = Visibility.Visible;
-                Ip.Text = "192.168.0.3";
             }
 
             if (isUsers)
@@ -183,11 +182,6 @@ namespace RaspberryConteiner
             get { return NameOfDevice.Text; }
             set { NameOfDevice.Text = value; }
         }
-        public string IpAddres
-        {
-            get { return Ip.Text; }
-            set { Ip.Text = value; }
-        }
 
         /// <summary>
         /// Add new device button
@@ -200,29 +194,26 @@ namespace RaspberryConteiner
             {
                 if (NumberPlatform.Text.Length != 0)
                 {
-                    if (IpAddres.Length != 0)
+                    MySqlConnection conn = new MySqlConnection(Parameters.connStr);
+                    try
                     {
-                        Device device = new Device
-                        {
-                            Width = Convert.ToInt32("400"),
-                            Height = Convert.ToInt32("180"),
-                            HorizontalAlignment = HorizontalAlignment.Left,
-                            VerticalAlignment = VerticalAlignment.Top,
-                            Margin = new Thickness(10, 18, 0, 0),
-                            NameofDevice = NameDevice,
-                            Nplatform = NumberPlatform.Text,
-                            Url = Ip.Text
-                        };
-                        Cards.Children.Add(device); // Add to the stack panel.
+                        conn.Open();
 
-                        System.Windows.Forms.MessageBox.Show("New Device Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                        AddNewItem.Visibility = Visibility.Hidden;
-                        ListDevice.Visibility = Visibility.Visible;
+                        var sql = "INSERT INTO `tempmonitor2`.`Devices` (`Name`, `NPlatform`) VALUES ('" + NameDevice + "', '" + NumberPlatform.Text + "'); ";
+                        MySqlCommand cmd = new MySqlCommand(sql, conn);
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+
+                        AddOneDevice(NameDevice, NumberPlatform.Text);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        System.Windows.Forms.MessageBox.Show("The Ip  is empty", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                     }
+                    conn.Close();
+
+                    System.Windows.Forms.MessageBox.Show("New Device Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    AddNewItem.Visibility = Visibility.Hidden;
+                    ListDevice.Visibility = Visibility.Visible;
                 }
                 else
                 {
@@ -236,7 +227,7 @@ namespace RaspberryConteiner
 
             // null string 
             NameOfDevice.Text = string.Empty;
-            Ip.Text = string.Empty;
+            NumberPlatform.Text = string.Empty;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -254,12 +245,11 @@ namespace RaspberryConteiner
             if (NameOfUser.Text.Length != 0)
             {
                 MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-
                 try
                 {
                     conn.Open();
 
-                    var sql = "INSERT INTO `tempmonitor`.`Users` (`Name`) VALUES ('" + NameOfUser.Text + "');";
+                    var sql = "INSERT INTO `tempmonitor2`.`Users` (`Name`) VALUES ('" + NameOfUser.Text + "');";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     MySqlDataReader rdr = cmd.ExecuteReader();
 

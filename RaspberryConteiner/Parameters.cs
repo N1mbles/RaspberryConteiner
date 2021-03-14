@@ -51,7 +51,7 @@
         public static int UserHeight = 300;
         #endregion
 
-        public static string connStr = "server=databasetemp.clbmsuilb1nx.eu-west-3.rds.amazonaws.com;Port=3306;user=admin;database=tempmonitor;password=3NqKPVNUCeGQ8gRJ;";
+        public static string connStr = "server=databasetemp.clbmsuilb1nx.eu-west-3.rds.amazonaws.com;Port=3306;user=admin;database=tempmonitor2;password=3NqKPVNUCeGQ8gRJ;";
 
         public static string CurrentUser
         {
