@@ -176,8 +176,21 @@ namespace RaspberryConteiner.CardControl
             {
                 if (SetTemp.Text.Length == 0)
                     System.Windows.Forms.MessageBox.Show("The field is empty", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                
+                MySqlConnection conn = new MySqlConnection(Parameters.connStr);
+                try
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand("UPDATE tempmonitor2.Devices SET MaxTemp ='" + int.Parse(SetTemp.Text) + "' WHERE NPlatform = '" + Nplatform + "' ;", conn);
+                    MaxTemp = int.Parse(SetTemp.Text);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
 
-                iMaxTemp = int.Parse(SetTemp.Text);
+                conn.Close();
             }
         }
         //public async void GetTemperatureFromServer()
@@ -260,7 +273,7 @@ namespace RaspberryConteiner.CardControl
                         MySqlDataReader rdr = (MySqlDataReader)await cmd.ExecuteReaderAsync();
 
                         while (await rdr.ReadAsync())
-                        {       
+                        {
                             // Set value on board
                             SetValueDB(int.Parse(rdr[4].ToString()), int.Parse(rdr[5].ToString()));
 
@@ -268,6 +281,7 @@ namespace RaspberryConteiner.CardControl
                             if (initTemperature)
                             {
                                 InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp
+
                                 //MySqlCommand cmd2 = new MySqlCommand("INSERT INTO `tempmonitor2`.`Devices` (`InitTemp`) VALUES ('"+ InitTemp.Content + "');", conn);
 
                                 // cmd2.ExecuteReader();

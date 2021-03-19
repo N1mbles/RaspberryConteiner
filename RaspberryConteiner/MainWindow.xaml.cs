@@ -252,7 +252,7 @@ namespace RaspberryConteiner
                     var sql = "INSERT INTO `tempmonitor2`.`Users` (`Name`) VALUES ('" + NameOfUser.Text + "');";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     MySqlDataReader rdr = cmd.ExecuteReader();
-
+                     
                     AddOneUser(NameOfUser.Text);
 
                     AddNewUser.Visibility = Visibility.Hidden;
