@@ -74,8 +74,7 @@
                         <Label x:Name="LiveTime" Content=""  Margin="0,3,0,3.6" FontFamily="./#9651" Foreground="#FFEBEBEB" FontSize="14" />
 
                         <!-- Refresh-->
-                        <!--<Image HorizontalAlignment="Left" Height="19" Margin="329,155,0,0" VerticalAlignment="Top" Width="17" Source="UserControlImage/refresh.png" MouseDown="Image_MouseDown_1" ToolTip="Refresh device"/>-->
-                        <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource UCButtonStyle}" Margin="0,4,3,4.3"  Width="22" Height="Auto" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" Click="Button_Click"  >
+                        <Button DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource UCButtonStyle}" Margin="0,4,3,4.3"  Width="22" Height="Auto" Click="Button_Click"  >
                             <Image Source="UserControlImage/refresh.png"  Height="21" Width="21" />
                         </Button>
 
@@ -85,15 +84,15 @@
         </Border>
 
 
-        <Grid x:Name="Confirmation" Visibility="Hidden">
-            <Border Margin="38,22,40,28" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="3" >
-                <!--<Label Content="Are you sure you want remove?" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="20" Margin="31,5,31.4,90.4"/>-->
-            </Border>
-            <Label x:Name="title" Content="Are you sure you want remove?" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="22" Margin="41,29,37,104" Width="322"/>
-            <Label x:Name="Description" Content="This device will be deleted." HorizontalAlignment="Center" VerticalAlignment="Center"  FontFamily="./#9651" FontSize="17" Margin="97,60,97,92"/>
-            
-            <Button Content="Remove"  Margin="242,101,75,48" BorderBrush="Black" Background="{x:Null}" BorderThickness="5,1,1,1" Click="Button_Click_1" FontFamily="Segoe UI Semibold" FontSize="16"/>
-            <Button Content="Cancel"  Margin="84,101,233,48" BorderBrush="Black" Background="#FF25BED4" BorderThickness="1" Click="Button_Click_2" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" />
+        <Grid x:Name="Confirmation" Visibility="Hidden" Margin="38,22,40,28">
+            <Border x:Name="borderNotify" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="3" />
+
+            <TextBlock x:Name="title" Text="Are you sure you want remove?" Margin="0,0,0,50"  Padding="7" FontFamily="./#9651" FontSize="22"  Foreground="Black" TextWrapping="Wrap" />
+
+            <Label x:Name="Description" Content="This device will be deleted." HorizontalAlignment="Center"  FontFamily="./#9651" FontSize="17" Margin="55,37,57,66"/>
+
+            <Button x:Name="btnRemove" Content="Remove"  HorizontalAlignment="Right" Height="25"  BorderBrush="Black" Background="{x:Null}" BorderThickness="5,1,1,1" Click="Button_Click_1" FontFamily="Segoe UI Semibold" FontSize="16" Margin="0,92,30,13" Width="75"/>
+            <Button x:Name="btnCancel" Content="Cancel"  HorizontalAlignment="Left" Height="25"   BorderBrush="Black" Background="#FF25BED4" BorderThickness="1" Click="Button_Click_2" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Margin="30,92,0,13" Width="60" />
 
         </Grid>
 

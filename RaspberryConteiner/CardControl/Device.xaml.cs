@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -125,14 +126,18 @@ namespace RaspberryConteiner.CardControl
         /// <param name="e"></param>
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //(Parent as WrapPanel).Children.Remove(this);
+            SetBackBlur();
+            //Show modal window
+            Confirmation.Visibility = System.Windows.Visibility.Visible;
+        }
 
+        private void SetBackBlur()
+        {
+            // Add backgroud blur effect
             System.Windows.Media.Effects.BlurEffect blurEffect = new System.Windows.Media.Effects.BlurEffect();
             blurEffect.KernelType = System.Windows.Media.Effects.KernelType.Gaussian;
             blurEffect.Radius = 7;
             this.BlurCard.Effect = blurEffect;
-
-            Confirmation.Visibility = System.Windows.Visibility.Visible;
         }
         // Only one click for start
         private bool clickOne = true;
@@ -143,7 +148,6 @@ namespace RaspberryConteiner.CardControl
                 clickOne = false;
                 StartGettingTemp();
             }
-
         }
         private void Label_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -176,7 +180,7 @@ namespace RaspberryConteiner.CardControl
             {
                 if (SetTemp.Text.Length == 0)
                     System.Windows.Forms.MessageBox.Show("The field is empty", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                
+
                 MySqlConnection conn = new MySqlConnection(Parameters.connStr);
                 try
                 {
@@ -267,7 +271,6 @@ namespace RaspberryConteiner.CardControl
                     try
                     {
                         MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-
                         await conn.OpenAsync();
                         MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ", conn);
                         MySqlDataReader rdr = (MySqlDataReader)await cmd.ExecuteReaderAsync();
@@ -295,6 +298,7 @@ namespace RaspberryConteiner.CardControl
                             if (int.Parse(rdr[4].ToString()) >= iMaxTemp)
                             {
                                 LiveTime.Stop();
+                                NotificationEndProcess();
                             }
 
                             SetBackgroundTemp(int.Parse(rdr[4].ToString()));
@@ -309,6 +313,31 @@ namespace RaspberryConteiner.CardControl
                 }
                 // GetTemperatureFromServer();
             }
+        }
+
+        /// <summary>
+        /// Show message that device has reached the maximum set temperature.
+        /// </summary>
+        private void NotificationEndProcess()
+        {
+            // Play a sound as a notification.
+            SystemSounds.Beep.Play();
+
+            SetBackBlur();
+            //Show modal window
+            Confirmation.Visibility = System.Windows.Visibility.Visible;
+
+            //Change Info
+            title.Text = "The device has reached the maximum set temperature!";
+            //
+            Description.Visibility = System.Windows.Visibility.Hidden;
+            btnRemove.Visibility = System.Windows.Visibility.Hidden;
+
+            //Button ok
+            btnCancel.Content = "Ok";
+            btnCancel.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+            btnCancel.VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            btnCancel.Margin = new System.Windows.Thickness(0);
         }
 
         private void SetValueDB(int _currentTemp, int _maxTemp)
