@@ -197,60 +197,6 @@ namespace RaspberryConteiner.CardControl
                 conn.Close();
             }
         }
-        //public async void GetTemperatureFromServer()
-        //{
-        //    GetTemp client = new GetTemp();
-
-        //    DispatcherTimer LiveTime = new DispatcherTimer
-        //    {
-        //        Interval = new TimeSpan(0, 0, 1)
-        //    };
-        //    LiveTime.Tick += Timer_Tick;
-        //    LiveTime.Start();
-
-        //    while (true)
-        //    {
-        //        try
-        //        {
-        //            var retTemp = await client.GetTemperature(_url);
-        //            // If answer != 404 execute code
-        //            if (Convert.ToInt32(retTemp) != 404)
-        //            {
-        //                if (initTemperature)
-        //                {
-        //                    InitTemp.Content = Convert.ToInt32(retTemp).ToString();//Show on initialization temp
-        //                    initTemperature = false;
-        //                }
-        //                SetStatusDevice(true);
-
-        //                LocalTemp.Content = Convert.ToInt32(retTemp).ToString(); //Show on board temp
-
-        //                if (Convert.ToInt32(retTemp) >= iMaxTemp)
-        //                {
-        //                    LiveTime.Stop();
-        //                }
-
-        //                // tempereture.Add(new TempData(NameofDevice, retTemp));
-
-        //                SetBackgroundTemp(retTemp);
-        //                await Task.Delay(1000 * Parameters.Delay);
-        //            }
-        //            // else We dont have connection, we throw error
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            statusConnect = false;
-        //            initTemperature = true; //
-        //            SetStatusDevice(false);
-        //            System.Windows.Forms.MessageBox.Show("Device: " + NameofDevice + " - Error \n" + ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-        //            break;
-        //        }
-        //    }
-        //    if (!statusConnect)
-        //    {
-        //        LiveTime.Stop();
-        //    }
-        //}
         private async void StartGettingTemp()
         {
             if (SetTemp.Text.Length == 0)
