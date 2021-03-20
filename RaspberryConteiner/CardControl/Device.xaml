@@ -104,9 +104,30 @@
             <!--<Label x:Name="Description2" Content="This device will be deleted." HorizontalAlignment="Center"  FontFamily="./#9651" FontSize="17" Margin="55,37,57,66"/>-->
 
             <Button x:Name="btnOk" Content="Ok"  HorizontalAlignment="Center" Height="25"   BorderBrush="Black" Background="#FF25BED4" BorderThickness="1" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16"  Width="60" Margin="130,94,132,11" Click="btnOk_Click" />
-
         </Grid>
 
+        <Grid x:Name="ConfirmationReset" Visibility="Hidden" Margin="38,22,40,28">
+            <Border x:Name="borderNotifyReset" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="3" />
+
+            <TextBlock x:Name="titleReset" Text="Are you sure you want to reset all temperature readings?" HorizontalAlignment="Center"  Margin="0,0,0,50"  Padding="7" FontFamily="./#9651" FontSize="22"  Foreground="Black" TextWrapping="Wrap" />
+
+            <!--<Label x:Name="Description2" Content="This device will be deleted." HorizontalAlignment="Center"  FontFamily="./#9651" FontSize="17" Margin="55,37,57,66"/>-->
+
+            <Button x:Name="btnReset" Content="Reset"  HorizontalAlignment="Right" Height="25"  BorderBrush="Black" Background="{x:Null}" BorderThickness="5,1,1,1" FontFamily="Segoe UI Semibold" FontSize="16" Margin="0,92,30,13" Width="75" Click="btnReset_Click"/>
+            <Button x:Name="btnCancelReset" Content="Cancel"  HorizontalAlignment="Left" Height="25"   BorderBrush="Black" Background="#FF25BED4" BorderThickness="1"  Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Margin="30,92,0,13" Width="60" Click="btnCancelReset_Click" />
+        </Grid>
+
+        <Grid x:Name="ErrorCon" Visibility="Hidden" Margin="38,22,40,28">
+            <Border x:Name="Bord" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="3" />
+
+            <TextBlock x:Name="titlee" Text="Error connecting to server " HorizontalAlignment="Center"  Margin="0,0,0,50"  Padding="7" FontFamily="./#9651" FontSize="22"  Foreground="Black" TextWrapping="Wrap" />
+
+            <!--<Label x:Name="Description2" Content="This device will be deleted." HorizontalAlignment="Center"  FontFamily="./#9651" FontSize="17" Margin="55,37,57,66"/>-->
+
+            <Button x:Name="btnTryRecon" Content="Reconnect"  HorizontalAlignment="Right" Height="25"  BorderBrush="Black" Background="{x:Null}" BorderThickness="5,1,1,1" FontFamily="Segoe UI Semibold" FontSize="16" Margin="0,92,30,13"  Padding="3,1"/>
+            <Button x:Name="btnOkk" Content="Ok"  HorizontalAlignment="Left" Height="25"   BorderBrush="Black" Background="#FF25BED4" BorderThickness="1"  Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Margin="30,92,0,13" Width="60" />
+        </Grid>
+        
     </Grid>
 
 </UserControl>

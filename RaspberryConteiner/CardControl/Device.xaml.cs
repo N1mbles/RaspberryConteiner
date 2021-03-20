@@ -365,7 +365,9 @@ namespace RaspberryConteiner.CardControl
         /// <param name="e"></param>
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            System.Windows.Forms.MessageBox.Show("Test");
+            SetBackBlur();
+
+            ConfirmationReset.Visibility = System.Windows.Visibility.Visible;
         }
         /// <summary>
         /// Remove device(this)
@@ -408,6 +410,29 @@ namespace RaspberryConteiner.CardControl
         private void btnOk_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ConfirmationEndProcess.Visibility = System.Windows.Visibility.Hidden;
+
+            // Remove effect
+            this.BlurCard.Effect = null;
+        }
+
+        private void btnCancelReset_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ConfirmationReset.Visibility = System.Windows.Visibility.Hidden;
+
+            // Remove effect
+            this.BlurCard.Effect = null;
+        }
+
+        private void btnReset_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+           LocalTemp.Content = string.Empty;
+
+           InitTemp.Content = string.Empty;
+
+           SetTemp.Text = string.Empty;
+
+
+            ConfirmationReset.Visibility = System.Windows.Visibility.Hidden; //Hide notification menu
 
             // Remove effect
             this.BlurCard.Effect = null;
