@@ -128,7 +128,7 @@ namespace RaspberryConteiner.CardControl
         {
             SetBackBlur();
             //Show modal window
-            Confirmation.Visibility = System.Windows.Visibility.Visible;
+            ConfirmationRemoved.Visibility = System.Windows.Visibility.Visible;
         }
 
         private void SetBackBlur()
@@ -325,7 +325,7 @@ namespace RaspberryConteiner.CardControl
 
             SetBackBlur();
             //Show modal window
-            Confirmation.Visibility = System.Windows.Visibility.Visible;
+            ConfirmationEndProcess.Visibility = System.Windows.Visibility.Visible;
 
             //Change Info
             title.Text = "The device has reached the maximum set temperature!";
@@ -335,9 +335,7 @@ namespace RaspberryConteiner.CardControl
 
             //Button ok
             btnCancel.Content = "Ok";
-            btnCancel.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-            btnCancel.VerticalAlignment = System.Windows.VerticalAlignment.Center;
-            btnCancel.Margin = new System.Windows.Thickness(0);
+            btnCancel.HorizontalAlignment = System.Windows.HorizontalAlignment.Center;         
         }
 
         private void SetValueDB(int _currentTemp, int _maxTemp)
@@ -455,7 +453,15 @@ namespace RaspberryConteiner.CardControl
         /// <param name="e"></param>
         private void Button_Click_2(object sender, System.Windows.RoutedEventArgs e)
         {
-            Confirmation.Visibility = System.Windows.Visibility.Hidden;
+            ConfirmationRemoved.Visibility = System.Windows.Visibility.Hidden;
+
+            // Remove effect
+            this.BlurCard.Effect = null;
+        }
+
+        private void btnOk_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            ConfirmationEndProcess.Visibility = System.Windows.Visibility.Hidden;
 
             // Remove effect
             this.BlurCard.Effect = null;
