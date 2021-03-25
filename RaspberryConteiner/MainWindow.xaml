@@ -44,9 +44,9 @@
                 <Button DockPanel.Dock="Right" Style="{StaticResource MenuButtonStyle}" Width="73" HorizontalAlignment="Right"  Margin="18,0,15,0" Click="Button_Click_9"  >
                     <Image Source="Image/gear.png" />
                 </Button>
-                
+
                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="_CurrentUser"  Text=""  Height="40" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="20"/>
-          
+
             </DockPanel>
         </Grid>
 
@@ -95,8 +95,34 @@
         </Grid>
 
         <!--Statistic-->
-        <Grid x:Name="Statistic" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Hidden" >
-            <Label Content="Statistics"  VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="30" />
+        <Grid x:Name="Statistics" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Hidden"  >
+            
+            <DockPanel Margin="0,0,0.4,559">
+                
+            <Button DockPanel.Dock="Left" Margin="10,0" HorizontalAlignment="Left" Width="40" Height="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                <Image Source="CardControl/UserControlImage/refresh.png"/>
+            </Button>
+                
+              
+              
+            </DockPanel>
+            
+            <!--<Label Content="Statistics"  VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="30" />-->
+            <DataGrid x:Name="grdStats" AutoGenerateColumns="False"  Margin="10,60,10,51" Background="{x:Null}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn  Header="Name" Width="100" Binding="{Binding UsersName}" />
+                    <DataGridTextColumn  Header="№ Platform" Width="130" Binding="{Binding Nplatform}" />
+                    <DataGridTextColumn  Header="Temperature start" Width="110" Binding="{Binding TempStart}" />
+                    <DataGridTextColumn  Header="Temperature end" Width="105" Binding="{Binding TempEnd}" />
+                    <DataGridTextColumn  Header="Date start" Width="75" Binding="{Binding DataStart}" />
+                    <DataGridTextColumn  Header="Date end" Width="75" Binding="{Binding DataEnd}" />
+                    <DataGridTextColumn  Header="Uptime" Width="80" Binding="{Binding UpTime}" />
+                    <DataGridTextColumn  Header="Matricula" Width="80" Binding="{Binding Enrollment}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            
+            <Button Content="Export to Excel" HorizontalAlignment="Center" Margin="0,578,0,10"  Width="132" Height="32" Background="#FF25BED4" BorderBrush="Black" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" />
+
 
 
 
@@ -113,8 +139,8 @@
             <Label Content="Max temperature" HorizontalAlignment="Left" Margin="29,165,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="14" ToolTip="Set the maximum default temperature on the device"/>
             <TextBox x:Name="MaxTemp" HorizontalAlignment="Left" Height="23" Margin="169,171,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="3" />
         </Grid>
-        
-        <Image x:Name="Add" Height="49" Margin="22,132,0,0" Width="49" Source="Image/plus.png" MouseDown="Image_MouseDown_4" ToolTip="Add new Device" MaxWidth="50" MaxHeight="50" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-   
+
+        <Image x:Name="Add" Height="49" Margin="22,132,0,0" Visibility="Hidden" Width="49" Source="Image/plus.png" MouseDown="Image_MouseDown_4" ToolTip="Add new Device" MaxWidth="50" MaxHeight="50" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>

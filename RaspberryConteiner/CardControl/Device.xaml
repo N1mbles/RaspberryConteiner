@@ -71,7 +71,7 @@
                         <!-- Timer-->
                         <Image DockPanel.Dock="Left" Margin="5,4.3,5,4.3" Source="UserControlImage/clock.png" Width="20" />
                         <Label Content="UPTIME:"  Margin="0,3,0,3.6" FontFamily="./#9651" Foreground="#FFEBEBEB" FontSize="13" Width="58" />
-                        <Label x:Name="LiveTime" Content=""  Margin="0,3,0,3.6" FontFamily="./#9651" Foreground="#FFEBEBEB" FontSize="14" />
+                        <Label x:Name="LiveTimes" Content=""  Margin="0,3,0,3.6" FontFamily="./#9651" Foreground="#FFEBEBEB" FontSize="14" />
 
                         <!-- Refresh-->
                         <Button x:Name="btnRefresh"  DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource UCButtonStyle}" Margin="0,4,3,4.3"  Width="22" Height="Auto" Click="Button_Click" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}"  >

@@ -4,6 +4,7 @@ using System.Windows.Input;
 using RaspberryConteiner.CardControl;
 using System.Linq;
 using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace RaspberryConteiner
 {
@@ -24,6 +25,7 @@ namespace RaspberryConteiner
             //
             ListDevice.Visibility = Visibility.Visible;
             // Enable icon "Add"
+            Add.Visibility = Visibility.Visible;
             isDevices = true;
             // Set default Port
             PortAddres.Text = Parameters.Port.ToString();
@@ -162,6 +164,7 @@ namespace RaspberryConteiner
                 ListOfUsers.Visibility = Visibility.Hidden;
                 AddNewUser.Visibility = Visibility.Visible;
             }
+
         }
         /// <summary>
         /// Exit from dashboard Key "Esc"
@@ -417,6 +420,8 @@ namespace RaspberryConteiner
             //
             ListDevice.Visibility = Visibility.Visible;
             ListOfUsers.Visibility = Visibility.Hidden;
+            //
+            Statistics.Visibility = Visibility.Hidden;
         }
         // Users
         private void Button_Click_7(object sender, RoutedEventArgs e)
@@ -431,10 +436,36 @@ namespace RaspberryConteiner
             //Visible panel of users
             ListDevice.Visibility = Visibility.Hidden;
             ListOfUsers.Visibility = Visibility.Visible;
+            //
+            Statistics.Visibility = Visibility.Hidden;
         }
 
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
+            Statistics.Visibility = Visibility.Visible;
+
+            Add.Visibility = Visibility.Hidden;
+
+            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
+            try
+            {
+                conn.Open();
+
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Statistics;", conn);
+                //  MySqlDataReader rdr = cmd.ExecuteReader();
+                MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
+                DataTable stats = new DataTable("Statistics");
+
+                sda.FillAsync(stats);
+                grdStats.ItemsSource = stats.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            }
+
+            conn.Close();
+
 
         }
         // Show Settings
