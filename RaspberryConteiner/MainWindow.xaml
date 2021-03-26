@@ -126,11 +126,9 @@
                     <DataGridTextColumn  Header="Matricula" Width="80" Binding="{Binding Enrollment}" />
                 </DataGrid.Columns>
             </DataGrid>
-
-            <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <Button Content="Export to Excel" Margin="10,5"  HorizontalAlignment="Center" Width="132" Background="#FF25BED4" BorderBrush="Black" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Click="Button_Click_11" />
-            </StackPanel>
-
+            
+            <!--Button Export-->
+            <Button Grid.Row="2" Content="Export to Excel" Margin="10,5"  HorizontalAlignment="Center" Width="132" Background="#FF25BED4" BorderBrush="Black" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Click="Button_Click_11" />
         </Grid>
 
         <!-- Settings -->
