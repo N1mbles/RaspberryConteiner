@@ -95,36 +95,41 @@
         </Grid>
 
         <!--Statistic-->
-        <Grid x:Name="Statistics" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Hidden"  >
-            
-            <DockPanel Margin="0,0,0.4,559">
-                
-            <Button DockPanel.Dock="Left" Margin="10,0" HorizontalAlignment="Left" Width="40" Height="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}">
-                <Image Source="CardControl/UserControlImage/refresh.png"/>
-            </Button>
-                
-              
-              
+        <Grid x:Name="Statistics" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Visible" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="509*"/>
+                <RowDefinition Height="50*"/>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0">
+                <Button DockPanel.Dock="Left" Margin="10,0" HorizontalAlignment="Left" Width="40" Height="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="Button_Click_4">
+                    <Image Source="CardControl/UserControlImage/refresh.png"/>
+                </Button>
+
+                <Label DockPanel.Dock="Left" Margin="100,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"  Content="From" FontFamily="./#9651" FontSize="16" />
+                <DatePicker x:Name="startData" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" IsTodayHighlighted="True" Margin="10,14,0,13.4" Width="115" BorderBrush="{x:Null}"/>
+                <Label DockPanel.Dock="Left" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"  Content="To" FontFamily="./#9651" FontSize="16" />
+                <DatePicker x:Name="endData"   DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" IsTodayHighlighted="True" Margin="10,14,100,13.4" Width="115" BorderBrush="{x:Null}" Background="{x:Null}"/>
+
             </DockPanel>
-            
+
             <!--<Label Content="Statistics"  VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="30" />-->
-            <DataGrid x:Name="grdStats" AutoGenerateColumns="False"  Margin="10,60,10,51" Background="{x:Null}">
+            <DataGrid x:Name="grdStats" AutoGenerateColumns="False"  Margin="10,0,10.4,51" Background="{x:Null}" Grid.Row="1" Grid.RowSpan="2" BorderBrush="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn  Header="Name" Width="100" Binding="{Binding UsersName}" />
                     <DataGridTextColumn  Header="№ Platform" Width="130" Binding="{Binding Nplatform}" />
                     <DataGridTextColumn  Header="Temperature start" Width="110" Binding="{Binding TempStart}" />
                     <DataGridTextColumn  Header="Temperature end" Width="105" Binding="{Binding TempEnd}" />
-                    <DataGridTextColumn  Header="Date start" Width="75" Binding="{Binding DataStart}" />
-                    <DataGridTextColumn  Header="Date end" Width="75" Binding="{Binding DataEnd}" />
+                    <DataGridTextColumn  Header="Date start" Width="70" Binding="{Binding DataStart}" />
+                    <DataGridTextColumn  Header="Date end" Width="70" Binding="{Binding DataEnd}" />
                     <DataGridTextColumn  Header="Uptime" Width="80" Binding="{Binding UpTime}" />
                     <DataGridTextColumn  Header="Matricula" Width="80" Binding="{Binding Enrollment}" />
                 </DataGrid.Columns>
             </DataGrid>
-            
-            <Button Content="Export to Excel" HorizontalAlignment="Center" Margin="0,578,0,10"  Width="132" Height="32" Background="#FF25BED4" BorderBrush="Black" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" />
 
-
-
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <Button Content="Export to Excel" Margin="10,5"  HorizontalAlignment="Center" Width="132" Background="#FF25BED4" BorderBrush="Black" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Click="Button_Click_11" />
+            </StackPanel>
 
         </Grid>
 

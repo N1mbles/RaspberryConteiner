@@ -5,6 +5,7 @@ using RaspberryConteiner.CardControl;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace RaspberryConteiner
 {
@@ -17,6 +18,10 @@ namespace RaspberryConteiner
         private bool isDevices = false;
         private bool isUsers = false;
         public string CcurrentUser { get; set; }
+
+        //
+        MySqlDataAdapter sda;
+
 
         public MainWindow()
         {
@@ -446,27 +451,7 @@ namespace RaspberryConteiner
 
             Add.Visibility = Visibility.Hidden;
 
-            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-            try
-            {
-                conn.Open();
-
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Statistics;", conn);
-                //  MySqlDataReader rdr = cmd.ExecuteReader();
-                MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
-                DataTable stats = new DataTable("Statistics");
-
-                sda.FillAsync(stats);
-                grdStats.ItemsSource = stats.DefaultView;
-            }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-            }
-
-            conn.Close();
-
-
+            GetStats();
         }
         // Show Settings
         private void Button_Click_9(object sender, RoutedEventArgs e)
@@ -487,6 +472,47 @@ namespace RaspberryConteiner
         {
             Exit exit = new Exit();
             exit.Show();
+        }
+        /// <summary>
+        /// Button "refresh" in form statistics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+            GetStats();
+        }
+        private void GetStats()
+        {
+            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
+            try
+            {
+                conn.Open();
+
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Statistics;", conn);
+                //  MySqlDataReader rdr = cmd.ExecuteReader();
+                sda = new MySqlDataAdapter(cmd);
+                DataTable stats = new DataTable("Statistics");
+
+                sda.FillAsync(stats);
+                grdStats.ItemsSource = stats.DefaultView;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            }
+
+            conn.Close();
+        }
+
+        /// <summary>
+        /// Export data to excel
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_11(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
