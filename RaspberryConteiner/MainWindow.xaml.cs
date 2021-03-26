@@ -4,11 +4,7 @@ using System.Windows.Input;
 using RaspberryConteiner.CardControl;
 using System.Linq;
 using MySql.Data.MySqlClient;
-using Excel = Microsoft.Office.Interop.Excel;
-using Microsoft.Office.Interop.Excel;
 using Microsoft.Win32;
-using System.Windows.Controls;
-using System.Diagnostics;
 using ClosedXML.Excel;
 
 namespace RaspberryConteiner
@@ -23,9 +19,7 @@ namespace RaspberryConteiner
         private bool isUsers = false;
         public string CcurrentUser { get; set; }
 
-        //
-        MySqlDataAdapter sda;
-
+        //Table with statistics
         System.Data.DataTable stats;
 
 
@@ -485,8 +479,7 @@ namespace RaspberryConteiner
                 conn.Open();
 
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Statistics;", conn);
-                //  MySqlDataReader rdr = cmd.ExecuteReader();
-                sda = new MySqlDataAdapter(cmd);
+                MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
                 stats = new System.Data.DataTable("Statistics");
 
                 sda.FillAsync(stats);

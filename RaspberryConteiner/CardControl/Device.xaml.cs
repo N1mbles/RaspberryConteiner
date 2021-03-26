@@ -1,5 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using Rasberry.Api.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +17,6 @@ namespace RaspberryConteiner.CardControl
     /// </summary>
     public partial class Device : UserControl
     {
-        List<TempData> tempereture = new List<TempData>();
-
         public Device()
         {
             InitializeComponent();
@@ -389,32 +386,7 @@ namespace RaspberryConteiner.CardControl
                 StatusImage.Source = bitmap;
             }
         }
-        public void ExportDataToExcel()
-        {
-            try
-            {
-                MainWindow main = new MainWindow();
-
-                List<TempData> test = new List<TempData>
-                    {
-                        new TempData(NameDevice.Text,17.600),
-                        new TempData(NameDevice.Text,17.600),
-                        new TempData(NameDevice.Text,17.625),
-                        new TempData(NameDevice.Text,17.75),
-                        new TempData(NameDevice.Text,17.75),
-                        new TempData(NameDevice.Text,17.800),
-                        new TempData(NameDevice.Text,17.800)
-                    };
-
-                ExcelHelper.Save(main._CurrentUser.Text, test);
-            }
-
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-            }
-        }
-
+     
         /// <summary>
         /// Reset value
         /// </summary>

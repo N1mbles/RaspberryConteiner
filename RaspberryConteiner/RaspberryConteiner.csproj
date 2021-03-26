@@ -274,12 +274,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rasberry.Api\Rasberry.Api.csproj">
-      <Project>{ad4f78eb-6a9d-48f8-9e1a-67acdaf7f5c2}</Project>
-      <Name>Rasberry.Api</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="CardControl\UserControlImage\cicleGreen.png" />
   </ItemGroup>
   <ItemGroup>
