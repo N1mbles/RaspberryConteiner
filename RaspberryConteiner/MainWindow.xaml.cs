@@ -400,7 +400,7 @@ namespace RaspberryConteiner
                 System.Windows.Forms.MessageBox.Show("\"Port\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
         }
-    
+
         //Dashboard
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
@@ -469,16 +469,39 @@ namespace RaspberryConteiner
         /// <param name="e"></param>
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            cbxInterval.Text = string.Empty;
             GetStats();
         }
-        private void GetStats()
+        private void GetStats(string option = null)
         {
             MySqlConnection conn = new MySqlConnection(Parameters.connStr);
             try
             {
                 conn.Open();
+                string sql = "SELECT * FROM tempmonitor2.Statistics;";
 
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Statistics;", conn);
+                if(option == "Last month")
+                {
+                     sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEAR(date_created) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(date_created) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH);";
+                }
+                if(option == "Last week")
+                {
+                     sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEARWEEK(date) = YEARWEEK(NOW() - INTERVAL 1 WEEK);";
+                }
+                if(option == "Last 3 month")
+                {
+                     sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 3 month;";
+                }
+                if(option == "Half year")
+                {
+                     sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 6 month;";
+                }
+                if (option == "Last Year")
+                {
+                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE order_date >= DATE_SUB(NOW(),INTERVAL 1 YEAR);";
+                }
+
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
                 stats = new System.Data.DataTable("Statistics");
 
@@ -489,7 +512,6 @@ namespace RaspberryConteiner
             {
                 System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
-
             conn.Close();
         }
 
@@ -499,7 +521,7 @@ namespace RaspberryConteiner
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_Click_11(object sender, RoutedEventArgs e)
-        {       
+        {
             SaveFileDialog openDlg = new SaveFileDialog();
             openDlg.FileName = "Statistics";
             openDlg.Filter = "Excel (.xls)|*.xls |Excel (.xlsx)|*.xlsx |All files (*.*)|*.*";
@@ -516,13 +538,26 @@ namespace RaspberryConteiner
                         workbook.Worksheets.Add(stats, "Statistics"); // Create new xlmsx document, Get data from DataTable
                         workbook.SaveAs(openDlg.FileName);
                     }
-                    System.Windows.Forms.MessageBox.Show("Export data", "You are successfully exported tour Data!",System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show("Export data", "You are successfully exported tour Data!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
                     System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void cbxInterval_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if(cbxInterval.SelectedValue == null)
+            {
+                return;
+            }
+            var value = cbxInterval.SelectedValue.ToString();
+
+            string result = value.Replace("System.Windows.Controls.ComboBoxItem: ", "");
+            GetStats(result);
+
         }
     }
 }

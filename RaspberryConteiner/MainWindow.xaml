@@ -102,14 +102,27 @@
                 <RowDefinition Height="50*"/>
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="0">
+
                 <Button DockPanel.Dock="Left" Margin="10,0" HorizontalAlignment="Left" Width="40" Height="40" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="Button_Click_4">
                     <Image Source="CardControl/UserControlImage/refresh.png"/>
                 </Button>
 
-                <Label DockPanel.Dock="Left" Margin="100,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"  Content="From" FontFamily="./#9651" FontSize="16" />
+
+                <ComboBox x:Name="cbxInterval" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" Height="29" Margin="10,11,0,10.4" SelectionChanged="cbxInterval_SelectionChanged" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="16">
+                    <ComboBoxItem Content="Last week"></ComboBoxItem>
+                    <ComboBoxItem Content="Last month"></ComboBoxItem>
+                    <ComboBoxItem Content="Last 3 month"></ComboBoxItem>
+                    <ComboBoxItem Content="Half year"></ComboBoxItem>
+                    <ComboBoxItem Content="Last Year"></ComboBoxItem>
+                </ComboBox>
+
+                <Label DockPanel.Dock="Left" Margin="300,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"  Content="From" FontFamily="./#9651" FontSize="16" />
                 <DatePicker x:Name="startData" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" IsTodayHighlighted="True" Margin="10,14,0,13.4" Width="115" BorderBrush="{x:Null}"/>
                 <Label DockPanel.Dock="Left" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"  Content="To" FontFamily="./#9651" FontSize="16" />
                 <DatePicker x:Name="endData"   DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" IsTodayHighlighted="True" Margin="10,14,100,13.4" Width="115" BorderBrush="{x:Null}" Background="{x:Null}"/>
+
+                <Button x:Name="btnApply" Content="Apply" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"  Background="#FF25BED4" BorderBrush="Black" Margin="0,11,0,10.4" Height="29" Foreground="White" FontSize="16"/>
+
 
             </DockPanel>
 
@@ -126,7 +139,7 @@
                     <DataGridTextColumn  Header="Matricula" Width="80" Binding="{Binding Enrollment}" />
                 </DataGrid.Columns>
             </DataGrid>
-            
+
             <!--Button Export-->
             <Button Grid.Row="2" Content="Export to Excel" Margin="10,5"  HorizontalAlignment="Center" Width="132" Background="#FF25BED4" BorderBrush="Black" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Click="Button_Click_11" />
         </Grid>
