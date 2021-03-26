@@ -4,15 +4,19 @@ using System.Windows.Input;
 using RaspberryConteiner.CardControl;
 using System.Linq;
 using MySql.Data.MySqlClient;
-using System.Data;
-using System.Data.SqlClient;
+using Excel = Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Excel;
+using Microsoft.Win32;
+using System.Windows.Controls;
+using System.Diagnostics;
+using ClosedXML.Excel;
 
 namespace RaspberryConteiner
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         // Status Dashboard
         private bool isDevices = false;
@@ -21,6 +25,8 @@ namespace RaspberryConteiner
 
         //
         MySqlDataAdapter sda;
+
+        System.Data.DataTable stats;
 
 
         public MainWindow()
@@ -260,7 +266,7 @@ namespace RaspberryConteiner
                     var sql = "INSERT INTO `tempmonitor2`.`Users` (`Name`) VALUES ('" + NameOfUser.Text + "');";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     MySqlDataReader rdr = cmd.ExecuteReader();
-                     
+
                     AddOneUser(NameOfUser.Text);
 
                     AddNewUser.Visibility = Visibility.Hidden;
@@ -400,18 +406,7 @@ namespace RaspberryConteiner
                 System.Windows.Forms.MessageBox.Show("\"Port\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
         }
-        /// <summary>
-        /// Export to excel
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Excel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Device device = new Device();
-            device.ExportDataToExcel();
-            System.Windows.Forms.MessageBox.Show("Success");
-        }
-
+    
         //Dashboard
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
@@ -492,7 +487,7 @@ namespace RaspberryConteiner
                 MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Statistics;", conn);
                 //  MySqlDataReader rdr = cmd.ExecuteReader();
                 sda = new MySqlDataAdapter(cmd);
-                DataTable stats = new DataTable("Statistics");
+                stats = new System.Data.DataTable("Statistics");
 
                 sda.FillAsync(stats);
                 grdStats.ItemsSource = stats.DefaultView;
@@ -511,8 +506,31 @@ namespace RaspberryConteiner
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_Click_11(object sender, RoutedEventArgs e)
-        {
+        {       
+            SaveFileDialog openDlg = new SaveFileDialog();
+            openDlg.FileName = "Statistics";
+            openDlg.Filter = "Excel (.xls)|*.xls |Excel (.xlsx)|*.xlsx |All files (*.*)|*.*";
+            openDlg.FilterIndex = 2;
+            openDlg.RestoreDirectory = true;
+            openDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
+            if (openDlg.ShowDialog() == true)
+            {
+                try
+                {
+                    using (XLWorkbook workbook = new XLWorkbook())
+                    {
+                        workbook.Worksheets.Add(stats, "Statistics"); // Create new xlmsx document, Get data from DataTable
+                        workbook.SaveAs(openDlg.FileName);
+                    }
+                    System.Windows.Forms.MessageBox.Show("Export data", "You are successfully exported tour Data!",System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }
+
