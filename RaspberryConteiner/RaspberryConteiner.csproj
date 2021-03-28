@@ -166,6 +166,7 @@
     <Compile Include="CardControl\Device.xaml.cs">
       <DependentUpon>Device.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MySqlHelper.cs" />
     <Compile Include="Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>

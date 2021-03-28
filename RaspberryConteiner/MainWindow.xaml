@@ -18,7 +18,7 @@
 
     <Grid Background="#FFCBC7C7" >
         <!-- Header-->
-        <Grid x:Name="Header" Margin="0,0,-0.4,613.6" MinWidth="480" MinHeight="100" VerticalAlignment="Top" >
+        <Grid x:Name="Header" Margin="0,0,0,613.6" MinWidth="480" MinHeight="100" VerticalAlignment="Top" >
             <Rectangle Stretch="UniformToFill"  HorizontalAlignment="Stretch"  Stroke="Black" VerticalAlignment="Top" Fill="Black" MinWidth="534" MinHeight="98" Height="100"/>
 
             <DockPanel>
@@ -76,7 +76,7 @@
         <!--Add new User-->
         <Grid x:Name="AddNewUser" Background="#FFDADADA" Margin="122,178,0,0" Visibility ="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Height="282">
             <Label Content="Name" HorizontalAlignment="Left" Margin="11,185,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16"/>
-            <TextBox x:Name="NameOfUser" HorizontalAlignment="Left" Height="23" Margin="84,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="135"/>
+            <TextBox x:Name="NameOfUser" HorizontalAlignment="Left" Height="23" Margin="84,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="135" BorderBrush="Black"/>
             <!--<TextBox x:Name="Ip" HorizontalAlignment="Left" Height="23" Margin="85,102,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>-->
             <Button Content="Add" HorizontalAlignment="Left" Margin="27,234,0,0" VerticalAlignment="Top" Width="75" Background="#FF4ABEE2" Foreground="White" FontSize="16" BorderThickness="4,1,1,1" Click="Button_Click_2" FontFamily="./#9651" />
             <Button Content="Cancel" HorizontalAlignment="Left" Margin="144,234,0,0" VerticalAlignment="Top" Width="75" Background="#FF4ABEE2" Foreground="White" FontSize="16" Click="Button_Click_3" FontFamily="./#9651"  />
@@ -94,7 +94,7 @@
         </Grid>
 
         <!--Statistic-->
-        <Grid x:Name="Statistics" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Visible" >
+        <Grid x:Name="Statistics" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Hidden" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="50*"/>
                 <RowDefinition Height="509*"/>

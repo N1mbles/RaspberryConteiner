@@ -208,43 +208,53 @@ namespace RaspberryConteiner
             {
                 if (NumberPlatform.Text.Length != 0)
                 {
-                    try
+                    using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
                     {
-                        MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-                        conn.Open();
+                        conn.OpenAsync();
+                        if (Helpers.MySqlHelper.CheckExists(conn, "SELECT COUNT(*) FROM `tempmonitor2`.`Devices` WHERE Name = '" + NameDevice + "';"))
+                        {
+                            System.Windows.Forms.MessageBox.Show("This name already exists in the database.", "Error server", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                using (MySqlCommand cmd = new MySqlCommand("INSERT INTO tempmonitor2.Devices (Name, NPlatform) VALUES (@NameDevice,@NumberPlatform); ", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@NameDevice", NameDevice);
+                                    cmd.Parameters.AddWithValue("@NumberPlatform", NumberPlatform.Text);
+                                    cmd.ExecuteNonQueryAsync();
 
-                        var sql = "INSERT INTO `tempmonitor2`.`Devices` (`Name`, `NPlatform`) VALUES ('" + NameDevice + "', '" + NumberPlatform.Text + "'); ";
-                        MySqlCommand cmd = new MySqlCommand(sql, conn);
-                        MySqlDataReader rdr = cmd.ExecuteReader();
+                                    AddOneDevice(NameDevice, NumberPlatform.Text);
 
-                        AddOneDevice(NameDevice, NumberPlatform.Text);
+                                    System.Windows.Forms.MessageBox.Show("New Device Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
 
-                        conn.Close();
+                                    //Hide from
+                                    AddNewItem.Visibility = Visibility.Hidden;
+                                    ListDevice.Visibility = Visibility.Visible;
+
+                                    // null string 
+                                    NameOfDevice.Text = string.Empty;
+                                    NumberPlatform.Text = string.Empty;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Windows.Forms.MessageBox.Show(ex.Message, "Error server", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                            }
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                    }
-
-                    System.Windows.Forms.MessageBox.Show("New Device Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                    AddNewItem.Visibility = Visibility.Hidden;
-                    ListDevice.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show("The Number Platform is empty", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show("The Number Platform is empty", "Error adding new device", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
             }
             else
             {
                 System.Windows.Forms.MessageBox.Show("The Name is empty", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
-
-            // null string 
-            NameOfDevice.Text = string.Empty;
-            NumberPlatform.Text = string.Empty;
         }
-
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             AddNewItem.Visibility = Visibility.Hidden;
@@ -259,28 +269,38 @@ namespace RaspberryConteiner
         {
             if (NameOfUser.Text.Length != 0)
             {
-                MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-                try
+                using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
                 {
                     conn.Open();
 
-                    var sql = "INSERT INTO `tempmonitor2`.`Users` (`Name`) VALUES ('" + NameOfUser.Text + "');";
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (Helpers.MySqlHelper.CheckExists(conn, "SELECT COUNT(*) FROM `tempmonitor2`.`Users` WHERE Name = '" + NameOfUser.Text + "';"))
+                    {
+                        System.Windows.Forms.MessageBox.Show("This name already exists in the database.", "Error server", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        try
+                        {
+                            using (MySqlCommand cmd = new MySqlCommand("INSERT INTO tempmonitor2.Users (Name) VALUES (@User);", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@User", NameOfUser.Text);
+                                cmd.ExecuteNonQueryAsync();
 
-                    AddOneUser(NameOfUser.Text);
+                                AddOneUser(NameOfUser.Text);
 
-                    AddNewUser.Visibility = Visibility.Hidden;
-                    ListOfUsers.Visibility = Visibility.Visible;
-                    System.Windows.Forms.MessageBox.Show("New User Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                                AddNewUser.Visibility = Visibility.Hidden;
+                                ListOfUsers.Visibility = Visibility.Visible;
+                                System.Windows.Forms.MessageBox.Show("New User Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
 
+                                NameOfUser.Text = string.Empty;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                }
-
-                conn.Close();
             }
             else
             {
@@ -288,6 +308,11 @@ namespace RaspberryConteiner
             }
         }
 
+        /// <summary>
+        /// Cancel adding user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             AddNewUser.Visibility = Visibility.Hidden;
