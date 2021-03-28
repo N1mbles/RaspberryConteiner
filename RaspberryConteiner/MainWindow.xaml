@@ -94,7 +94,7 @@
         </Grid>
 
         <!--Statistic-->
-        <Grid x:Name="Statistics" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Hidden" >
+        <Grid x:Name="Statistics" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Visible" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="50*"/>
                 <RowDefinition Height="509*"/>

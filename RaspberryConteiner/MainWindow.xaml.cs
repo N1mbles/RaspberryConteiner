@@ -529,28 +529,35 @@ namespace RaspberryConteiner
         /// <param name="e"></param>
         private void Button_Click_11(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog openDlg = new SaveFileDialog();
-            openDlg.FileName = "Statistics";
-            openDlg.Filter = "Excel (.xls)|*.xls |Excel (.xlsx)|*.xlsx |All files (*.*)|*.*";
-            openDlg.FilterIndex = 2;
-            openDlg.RestoreDirectory = true;
-            openDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
-            if (openDlg.ShowDialog() == true)
+            if (stats != null)
             {
-                try
+                SaveFileDialog openDlg = new SaveFileDialog();
+                openDlg.FileName = "Statistics";
+                openDlg.Filter = "Excel (.xls)|*.xls |Excel (.xlsx)|*.xlsx |All files (*.*)|*.*";
+                openDlg.FilterIndex = 2;
+                openDlg.RestoreDirectory = true;
+                openDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+                if (openDlg.ShowDialog() == true)
                 {
-                    using (XLWorkbook workbook = new XLWorkbook())
+                    try
                     {
-                        workbook.Worksheets.Add(stats, "Statistics"); // Create new xlmsx document, Get data from DataTable
-                        workbook.SaveAs(openDlg.FileName);
+                        using (XLWorkbook workbook = new XLWorkbook())
+                        {
+                            workbook.Worksheets.Add(stats, "Statistics"); // Create new xlmsx document, Get data from DataTable
+                            workbook.SaveAs(openDlg.FileName);
+                        }
+                        System.Windows.Forms.MessageBox.Show("You are successfully exported tour Data!", "Export data", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                     }
-                    System.Windows.Forms.MessageBox.Show("Export data", "You are successfully exported tour Data!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    catch (Exception ex)
+                    {
+                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error export data", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
-                }
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Statistics is empty", "Error export data", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
