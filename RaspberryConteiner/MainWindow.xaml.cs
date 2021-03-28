@@ -468,11 +468,25 @@ namespace RaspberryConteiner
             Statistics.Visibility = Visibility.Hidden;
         }
 
+        /// <summary>
+        /// Statistics
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Button_Click_8(object sender, RoutedEventArgs e)
         {
+            //Show statistics
             Statistics.Visibility = Visibility.Visible;
 
             Add.Visibility = Visibility.Hidden;
+
+            ListOfUsers.Visibility = Visibility.Hidden;
+            ListDevice.Visibility = Visibility.Hidden;
+
+            Settingss.Visibility = Visibility.Hidden;
+
+            AddNewItem.Visibility = Visibility.Hidden;
+            AddNewUser.Visibility = Visibility.Hidden;
 
             GetStats();
         }
@@ -488,6 +502,8 @@ namespace RaspberryConteiner
 
             AddNewItem.Visibility = Visibility.Hidden;
             AddNewUser.Visibility = Visibility.Hidden;
+
+            Statistics.Visibility = Visibility.Hidden;
         }
 
         // Shutdown
@@ -508,45 +524,46 @@ namespace RaspberryConteiner
         }
         private void GetStats(string option = null)
         {
-            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
             {
-                conn.Open();
-                string sql = "SELECT * FROM tempmonitor2.Statistics;";
+                try
+                {
+                    conn.OpenAsync();
+                    string sql = "SELECT * FROM tempmonitor2.Statistics;";
 
-                if (option == "Last month")
-                {
-                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEAR(date_created) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(date_created) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH);";
-                }
-                if (option == "Last week")
-                {
-                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEARWEEK(date) = YEARWEEK(NOW() - INTERVAL 1 WEEK);";
-                }
-                if (option == "Last 3 month")
-                {
-                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 3 month;";
-                }
-                if (option == "Half year")
-                {
-                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 6 month;";
-                }
-                if (option == "Last Year")
-                {
-                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE order_date >= DATE_SUB(NOW(),INTERVAL 1 YEAR);";
-                }
+                    if (option == "Last month")
+                    {
+                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEAR(date_created) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(date_created) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH);";
+                    }
+                    if (option == "Last week")
+                    {
+                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEARWEEK(date) = YEARWEEK(NOW() - INTERVAL 1 WEEK);";
+                    }
+                    if (option == "Last 3 month")
+                    {
+                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 3 month;";
+                    }
+                    if (option == "Half year")
+                    {
+                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 6 month;";
+                    }
+                    if (option == "Last Year")
+                    {
+                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE order_date >= DATE_SUB(NOW(),INTERVAL 1 YEAR);";
+                    }
 
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
-                stats = new System.Data.DataTable("Statistics");
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
+                    stats = new System.Data.DataTable("Statistics");
 
-                sda.FillAsync(stats);
-                grdStats.ItemsSource = stats.DefaultView;
+                    sda.FillAsync(stats);
+                    grdStats.ItemsSource = stats.DefaultView;
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
             }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-            }
-            conn.Close();
         }
 
         /// <summary>

@@ -106,7 +106,7 @@
                     <Image Source="CardControl/UserControlImage/refresh.png"/>
                 </Button>
 
-                <Label DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Filter" Height="29" Margin="30,11,0,10.4" FontFamily="./#9651" FontSize="16" Width="45"/>
+                <Label DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Filter" Height="29" Margin="35,11,0,10.4" FontFamily="./#9651" FontSize="16" Width="45"/>
 
                 <ComboBox x:Name="cbxInterval" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" Height="29" Margin="5,11,0,10.4" SelectionChanged="cbxInterval_SelectionChanged" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="16">
                     <ComboBoxItem Content="Last week"></ComboBoxItem>
@@ -127,7 +127,7 @@
             </DockPanel>
 
             <!--<Label Content="Statistics"  VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="30" />-->
-            <DataGrid x:Name="grdStats" AutoGenerateColumns="False"  Margin="10,0,10.4,51" Background="{x:Null}" Grid.Row="1" Grid.RowSpan="2" BorderBrush="{x:Null}">
+            <DataGrid x:Name="grdStats" AutoGenerateColumns="False"  HorizontalAlignment="Center" Grid.RowSpan="3" BorderBrush="{x:Null}" IsReadOnly="True" VerticalScrollBarVisibility="Visible"  Background="LightGray" RowBackground="LightYellow" AlternatingRowBackground="LightBlue" Margin="236,50,235.4,51" >
                 <DataGrid.Columns>
                     <DataGridTextColumn  Header="Name" Width="100" Binding="{Binding UsersName}" />
                     <DataGridTextColumn  Header="№ Platform" Width="130" Binding="{Binding Nplatform}" />
