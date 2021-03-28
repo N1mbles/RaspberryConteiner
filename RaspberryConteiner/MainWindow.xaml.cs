@@ -42,6 +42,13 @@ namespace RaspberryConteiner
             InitUsers();
             // Init Devices
             InitDevices();
+
+            ////Check Internet connection
+            //if(!InternetConnection.CheckForInternetConnection())
+            //{
+            //    NotConnection notConnection = new NotConnection();
+            //    notConnection.Show();
+            //}
         }
         /// <summary>
         /// Initialization Users from Db on load window
@@ -480,21 +487,21 @@ namespace RaspberryConteiner
                 conn.Open();
                 string sql = "SELECT * FROM tempmonitor2.Statistics;";
 
-                if(option == "Last month")
+                if (option == "Last month")
                 {
-                     sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEAR(date_created) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(date_created) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH);";
+                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEAR(date_created) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(date_created) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH);";
                 }
-                if(option == "Last week")
+                if (option == "Last week")
                 {
-                     sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEARWEEK(date) = YEARWEEK(NOW() - INTERVAL 1 WEEK);";
+                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEARWEEK(date) = YEARWEEK(NOW() - INTERVAL 1 WEEK);";
                 }
-                if(option == "Last 3 month")
+                if (option == "Last 3 month")
                 {
-                     sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 3 month;";
+                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 3 month;";
                 }
-                if(option == "Half year")
+                if (option == "Half year")
                 {
-                     sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 6 month;";
+                    sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 6 month;";
                 }
                 if (option == "Last Year")
                 {
@@ -549,7 +556,7 @@ namespace RaspberryConteiner
 
         private void cbxInterval_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if(cbxInterval.SelectedValue == null)
+            if (cbxInterval.SelectedValue == null)
             {
                 return;
             }
@@ -558,6 +565,11 @@ namespace RaspberryConteiner
             string result = value.Replace("System.Windows.Controls.ComboBoxItem: ", "");
             GetStats(result);
 
+        }
+
+        private void btnApply_Click(object sender, RoutedEventArgs e)
+        {
+            GetStats("DataPicker");
         }
     }
 }

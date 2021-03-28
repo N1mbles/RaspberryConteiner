@@ -166,14 +166,25 @@
     <Compile Include="CardControl\Device.xaml.cs">
       <DependentUpon>Device.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Loading.xaml.cs">
+      <DependentUpon>Loading.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CardControl\UserCard.xaml.cs">
       <DependentUpon>UserCard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Exit.xaml.cs">
       <DependentUpon>Exit.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InternetConnection.cs" />
+    <Compile Include="NotConnection.xaml.cs">
+      <DependentUpon>NotConnection.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Parameters.cs" />
     <Page Include="CardControl\Device.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Loading.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -197,6 +208,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="NotConnection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
