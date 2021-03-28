@@ -1,6 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
@@ -25,7 +24,20 @@ namespace RaspberryConteiner.CardControl
             SetTemp.Text = iMaxTemp.ToString();
         }
 
+        DispatcherTimer LiveTime;
+
         #region Variable
+        //UPTIME variable
+        private int time = 0;
+
+        // Only one click for start
+        private bool clickOne = true;
+
+        private bool IsWorking = true;
+        private long id;
+
+        private bool isResetting = false;
+
         private int iMaxTemp;
         public string NameofDevice
         {
@@ -66,10 +78,9 @@ namespace RaspberryConteiner.CardControl
         /// <param name="e"></param>
         private void Image_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-           // statusConnect = true;
+            // statusConnect = true;
             StartGettingTemp();
         }
-        private int time = 0;
         void Timer_Tick(object sender, EventArgs e)
         {
             //UPTIME.Content = DateTime.Now.ToString("HH:mm:ss");
@@ -116,6 +127,7 @@ namespace RaspberryConteiner.CardControl
                 }
             }
         }
+
         /// <summary>
         /// Remove current device
         /// </summary>
@@ -136,8 +148,12 @@ namespace RaspberryConteiner.CardControl
             blurEffect.Radius = 7;
             this.BlurCard.Effect = blurEffect;
         }
-        // Only one click for start
-        private bool clickOne = true;
+
+        /// <summary>
+        /// Starting getting 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Rectangle_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (clickOne)
@@ -194,8 +210,9 @@ namespace RaspberryConteiner.CardControl
                 conn.Close();
             }
         }
-        private bool IsWorking = true;
-        private long id;
+        /// <summary>
+        /// 
+        /// </summary>
         private async void StartGettingTemp()
         {
             if (SetTemp.Text.Length == 0)
@@ -204,83 +221,89 @@ namespace RaspberryConteiner.CardControl
             }
             else
             {
-                DispatcherTimer LiveTime = new DispatcherTimer
+                LiveTime = new DispatcherTimer
                 {
                     Interval = new TimeSpan(0, 0, 1)
                 };
                 LiveTime.Tick += Timer_Tick;
                 LiveTime.Start();
 
+                // loop running program
                 while (IsWorking)
                 {
-                    try
+                    using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
                     {
-                        MySqlConnection conn = new MySqlConnection(Parameters.connStr);
                         await conn.OpenAsync();
-                        MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ", conn);
-                        MySqlDataReader rdr = (MySqlDataReader)await cmd.ExecuteReaderAsync();
-
-                        while (await rdr.ReadAsync())
+                        try
                         {
-                            // Set value on board
-                            SetValueDB(int.Parse(rdr[4].ToString()), int.Parse(rdr[5].ToString()));
-
-                            //
-                            if (initTemperature)
+                            using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ", conn))
                             {
-                               // string date = DateTime.Now.ToString("yyyy-MM-dd");
-                                CreateStatsAsync(Parameters.CurrentUser, Nplatform, int.Parse(rdr[4].ToString()), DateTime.Now.ToString("yyyy-MM-dd"));
-                                InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp
-                                //MySqlCommand cmd2 = new MySqlCommand("INSERT INTO `tempmonitor2`.`Devices` (`InitTemp`) VALUES ('"+ InitTemp.Content + "');", conn);
-                                initTemperature = false;
+                                MySqlDataReader rdr = (MySqlDataReader)await cmd.ExecuteReaderAsync();
+
+                                while (await rdr.ReadAsync())
+                                {
+                                    // Set value on board
+                                    SetValueDB(int.Parse(rdr[4].ToString()), int.Parse(rdr[5].ToString()));
+
+                                    //Initialisation only 1 times
+                                    if (initTemperature)
+                                    {
+                                        // string date = DateTime.Now.ToString("yyyy-MM-dd");
+                                        CreateStatsAsync(Parameters.CurrentUser, Nplatform, int.Parse(rdr[4].ToString()), DateTime.Now.ToString("yyyy-MM-dd"));
+                                        InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp
+                                                                                        //MySqlCommand cmd2 = new MySqlCommand("INSERT INTO `tempmonitor2`.`Devices` (`InitTemp`) VALUES ('"+ InitTemp.Content + "');", conn);
+                                        initTemperature = false;
+                                    }
+
+                                    //
+                                    SetStatusDevice(true);
+
+                                    //When temp it reached the specified
+                                    if (int.Parse(rdr[4].ToString()) >= iMaxTemp)
+                                    {
+                                        FinalyStats(int.Parse(rdr[4].ToString()), LiveTimes.Content.ToString());
+                                        LiveTime.Stop();
+                                        NotificationEndProcess();
+                                        initTemperature = true;
+                                        IsWorking = false; // stop getting temp from database
+                                    }
+                                    //Set background color
+                                    SetBackgroundTemp(int.Parse(rdr[4].ToString()));
+                                }
                             }
-
-                            //
-                            SetStatusDevice(true);
-
-                            //When temp it reached the specified
-                            if (int.Parse(rdr[4].ToString()) >= iMaxTemp)   
-                            {
-                                FinalyStats(int.Parse(rdr[4].ToString()), LiveTimes.Content.ToString());
-                                LiveTime.Stop();
-                                NotificationEndProcess();
-                                initTemperature = true;
-                                IsWorking = false; // stop getting temp from database
-                            }
-
-                            SetBackgroundTemp(int.Parse(rdr[4].ToString()));
                         }
-                        await conn.CloseAsync();
+                        catch (Exception ex)
+                        {
+                            System.Windows.Forms.MessageBox.Show(ex.Message, "Error database", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                        }
+                        await Task.Delay(1000 * Parameters.Delay);
                     }
-                    catch (Exception ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                    }
-                    await Task.Delay(1000 * Parameters.Delay);
                 }
-                // GetTemperatureFromServer();
             }
         }
 
+        /// <summary>
+        /// Create statistics
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="Numplatform"></param>
+        /// <param name="startTemp"></param>
+        /// <param name="startDate"></param>
         private async void CreateStatsAsync(string userName, string Numplatform, int startTemp, string startDate)
         {
             using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
             {
                 try
                 {
-                    string query = "INSERT INTO tempmonitor2.Statistics(UsersName, Nplatform, TempStart, DataStart) VALUES (?UsersName,?Nplatform,?TempStart,?DataStart);";
                     await conn.OpenAsync();
-                    //MySqlCommand cmd = new MySqlCommand("INSERT INTO tempmonitor2.Statistics = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ", conn);
-                    //MySqlDataReader rdr = (MySqlDataReader)await cmd.ExecuteReaderAsync();
-
-                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    using (MySqlCommand cmd = new MySqlCommand("INSERT INTO tempmonitor2.Statistics(UsersName, Nplatform, TempStart, DataStart) VALUES (?UsersName,?Nplatform,?TempStart,?DataStart);", conn))
                     {
                         cmd.Parameters.Add("?UsersName", MySqlDbType.VarChar).Value = userName;
                         cmd.Parameters.Add("?Nplatform", MySqlDbType.VarChar).Value = Numplatform;
                         cmd.Parameters.Add("?TempStart", MySqlDbType.Int16).Value = startTemp;
                         cmd.Parameters.Add("?DataStart", MySqlDbType.Date).Value = DateTime.Now.ToString("yyyy-MM-dd");
                         await cmd.ExecuteNonQueryAsync();
-                       id = cmd.LastInsertedId;
+                        id = cmd.LastInsertedId;
                     }
                 }
                 catch (Exception ex)
@@ -290,6 +313,11 @@ namespace RaspberryConteiner.CardControl
             }
         }
 
+        /// <summary>
+        /// End write statistics
+        /// </summary>
+        /// <param name="endTemp"></param>
+        /// <param name="upTime"></param>
         private async void FinalyStats(int endTemp, string upTime)
         {
             using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
@@ -314,11 +342,12 @@ namespace RaspberryConteiner.CardControl
                     System.Windows.Forms.MessageBox.Show(ex.Message, "DataBase Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
             }
-        } 
-            /// <summary>
-            /// Show message that device has reached the maximum set temperature.
-            /// </summary>
-            private void NotificationEndProcess()
+        }
+
+        /// <summary>
+        /// Show message that device has reached the maximum set temperature.
+        /// </summary>
+        private void NotificationEndProcess()
         {
             // Play a sound as a notification.
             SystemSounds.Beep.Play();
@@ -386,7 +415,7 @@ namespace RaspberryConteiner.CardControl
                 StatusImage.Source = bitmap;
             }
         }
-     
+
         /// <summary>
         /// Reset value
         /// </summary>
@@ -398,6 +427,7 @@ namespace RaspberryConteiner.CardControl
 
             ConfirmationReset.Visibility = System.Windows.Visibility.Visible;
         }
+
         /// <summary>
         /// Remove device(this)
         /// </summary>
@@ -405,23 +435,25 @@ namespace RaspberryConteiner.CardControl
         /// <param name="e"></param>
         private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
         {
-            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
             {
-                conn.Open();
+                try
+                {
+                    conn.OpenAsync();
+                    using (MySqlCommand cmd = new MySqlCommand("DELETE FROM Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ", conn))
+                    {
+                        MySqlDataReader rdr = cmd.ExecuteReader();
 
-                MySqlCommand cmd = new MySqlCommand("DELETE FROM Devices WHERE Name = '" + NameofDevice + "' AND NPlatform = '" + Nplatform + "' ; ", conn);
-                MySqlDataReader rdr = cmd.ExecuteReader();
+                        // Remove device from wrapPanel
+                        (this.Parent as WrapPanel).Children.Remove(this);
+                    }
 
-                (this.Parent as WrapPanel).Children.Remove(this);
-
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error server", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
             }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-            }
-            conn.Close();
-
         }
         /// <summary>
         /// Cancel removing
@@ -458,8 +490,18 @@ namespace RaspberryConteiner.CardControl
 
             InitTemp.Content = string.Empty;
 
-            SetTemp.Text = string.Empty;
+            SetTemp.Text = Parameters.MaxTemperature.ToString();
 
+            //
+            clickOne = true;
+            //
+            IsWorking = true;
+            //
+            isResetting = true;
+
+            LiveTimes.Content = string.Empty;
+
+            time = 0;
 
             ConfirmationReset.Visibility = System.Windows.Visibility.Hidden; //Hide notification menu
 
