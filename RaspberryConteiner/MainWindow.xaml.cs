@@ -58,51 +58,53 @@ namespace RaspberryConteiner
             // Show current user in system
             _CurrentUser.Text = Parameters.CurrentUser;
 
-            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
             {
-                conn.Open();
-
-                MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Users;", conn);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-
-                while (rdr.Read())
+                try
                 {
-                    AddOneUser(rdr[1].ToString());
-                }
-                rdr.Close();
-            }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-            }
+                    conn.Open();
+                    using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Users;", conn))
+                    {
+                        MySqlDataReader rdr = cmd.ExecuteReader();
 
-            conn.Close();
+                        while (rdr.Read())
+                        {
+                            AddOneUser(rdr[1].ToString());
+                        }
+                        rdr.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
+            }
         }
 
         private void InitDevices()
         {
-            MySqlConnection conn = new MySqlConnection(Parameters.connStr);
-            try
+            using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
             {
-                conn.Open();
-
-                string sql = "SELECT * FROM tempmonitor2.Devices;";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-
-                while (rdr.Read())
+                try
                 {
-                    AddOneDevice(rdr[1].ToString(), rdr[2].ToString(), int.Parse(rdr[5].ToString())); ;
-                }
-                rdr.Close();
-            }
-            catch (Exception ex)
-            {
-                System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-            }
+                    conn.Open();
 
-            conn.Close();
+                    using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices;", conn))
+                    {
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+
+                        while (rdr.Read())
+                        {
+                            AddOneDevice(rdr[1].ToString(), rdr[2].ToString(), int.Parse(rdr[5].ToString())); ;
+                        }
+                        rdr.Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
+            }
         }
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
