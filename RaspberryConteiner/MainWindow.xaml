@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        xmlns:local="clr-namespace:RaspberryConteiner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="804" Width="1260.8" Loaded="Window_Loaded" WindowStyle="None" KeyDown="Window_KeyDown" WindowState="Maximized" WindowStartupLocation="CenterOwner" Closing="Window_Closing" Foreground="{x:Null}">
+        Title="MainWindow" Height="804" Width="1260" Loaded="Window_Loaded" WindowStyle="None" KeyDown="Window_KeyDown" WindowState="Maximized" WindowStartupLocation="CenterOwner" Closing="Window_Closing" Foreground="{x:Null}">
 
     <!-- Button style -->
     <Window.Resources>
@@ -44,7 +44,7 @@
                     <Image Source="Image/gear.png" />
                 </Button>
 
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="_CurrentUser"  Text=""  Height="40" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="20"/>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="_CurrentUser"  Text=""  Height="40" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="20" MouseDown="_CurrentUser_MouseDown" />
 
             </DockPanel>
         </Grid>

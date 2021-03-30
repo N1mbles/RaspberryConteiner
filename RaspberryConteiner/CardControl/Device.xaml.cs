@@ -35,9 +35,6 @@ namespace RaspberryConteiner.CardControl
 
         private bool IsWorking = true;
         private long id;
-
-        private bool isResetting = false;
-
         private int iMaxTemp;
         public string NameofDevice
         {
@@ -496,8 +493,6 @@ namespace RaspberryConteiner.CardControl
             clickOne = true;
             //
             IsWorking = true;
-            //
-            isResetting = true;
 
             LiveTimes.Content = string.Empty;
 

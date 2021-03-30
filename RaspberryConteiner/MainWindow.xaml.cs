@@ -617,10 +617,20 @@ namespace RaspberryConteiner
             GetStats(result);
 
         }
-
-        private void btnApply_Click(object sender, RoutedEventArgs e)
+        private void _CurrentUser_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            GetStats("DataPicker");
+            // Show icon Add
+            Add.Visibility = Visibility.Visible;
+            //
+            isDevices = false;
+            isUsers = true;
+            //Hide settings
+            Settingss.Visibility = Visibility.Hidden;
+            //Visible panel of users
+            ListDevice.Visibility = Visibility.Hidden;
+            ListOfUsers.Visibility = Visibility.Visible;
+            //
+            Statistics.Visibility = Visibility.Hidden;
         }
     }
 }
