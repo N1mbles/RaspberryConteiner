@@ -544,16 +544,51 @@ namespace RaspberryConteiner
                         sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 1 YEAR AND CURDATE();";
                     }
 
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
-                    MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
-                    stats = new System.Data.DataTable("Statistics");
+                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    {
+                        MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
 
-                    sda.FillAsync(stats);
-                    grdStats.ItemsSource = stats.DefaultView;
+                        stats = new System.Data.DataTable("Statistics");
+
+                        sda.FillAsync(stats);
+                        grdStats.ItemsSource = stats.DefaultView;
+
+                        //Show stats
+                        InfoBest(conn);
+                        completedTasks.Content = "Number of completed tasks: " + stats.DefaultView.Count.ToString();
+                    }
                 }
                 catch (Exception ex)
                 {
                     System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void InfoBest(MySqlConnection connection)
+        {
+            using (MySqlCommand cmd = new MySqlCommand("SELECT UsersName FROM tempmonitor2.Statistics GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ", connection))
+            {
+                //
+                var queryResultName = cmd.ExecuteScalar();
+                if (queryResultName != null)
+                {
+                    bestUser.Content = "Most completed tasks: " + queryResultName.ToString();
+                }
+                else
+                {
+                    bestUser.Content = "Most completed tasks: " + "Error"; ;
+                }
+                //
+                cmd.CommandText = "SELECT COUNT(UsersName) FROM tempmonitor2.Statistics GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ";
+                var queryResultCount = cmd.ExecuteScalar();
+                if (queryResultCount != null)
+                {
+                    bestUserCount.Content = "Count: " + queryResultCount.ToString();
+                }
+                else
+                {
+                    bestUserCount.Content = "Count: " + "Error";
                 }
             }
         }

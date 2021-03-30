@@ -261,7 +261,11 @@ namespace RaspberryConteiner.CardControl
                                     //When temp it reached the specified
                                     if (int.Parse(rdr[4].ToString()) >= iMaxTemp)
                                     {
-                                        FinalyStats(int.Parse(rdr[4].ToString()), LiveTimes.Content.ToString());
+                                        if(time >1)
+                                        {
+                                            FinalyStats(int.Parse(rdr[4].ToString()), LiveTimes.Content.ToString());
+                                        }
+                                        
                                         LiveTime.Stop();
                                         NotificationEndProcess();
                                         initTemperature = true;
