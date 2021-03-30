@@ -25,18 +25,6 @@ namespace RaspberryConteiner.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
-        public int PortAddress {
-            get {
-                return ((int)(this["PortAddress"]));
-            }
-            set {
-                this["PortAddress"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("80")]
         public int DefMaxTemp {
             get {

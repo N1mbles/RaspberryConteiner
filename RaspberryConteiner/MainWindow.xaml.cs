@@ -32,8 +32,6 @@ namespace RaspberryConteiner
             // Enable icon "Add"
             Add.Visibility = Visibility.Visible;
             isDevices = true;
-            // Set default Port
-            PortAddres.Text = Parameters.Port.ToString();
             //Set default max temperature
             MaxTemp.Text = Parameters.MaxTemperature.ToString();
             //Set default delay
@@ -407,33 +405,27 @@ namespace RaspberryConteiner
         /// <param name="e"></param>
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-            if (PortAddres.Text != null)
-            {
-                if (MaxTemp.Text != null)
-                {
-                    if (Delay.Text != null)
-                    {
-                        Parameters.Port = int.Parse(PortAddres.Text);
-                        Parameters.MaxTemperature = int.Parse(MaxTemp.Text);
-                        Parameters.Delay = int.Parse(Delay.Text);
-                        System.Windows.Forms.MessageBox.Show("Settings saved!");
-                    }
-                    else
-                    {
-                        System.Windows.Forms.MessageBox.Show("\"Delay\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                    }
 
+            if (MaxTemp.Text != null)
+            {
+                if (Delay.Text != null)
+                {
+                    Parameters.MaxTemperature = int.Parse(MaxTemp.Text);
+                    Parameters.Delay = int.Parse(Delay.Text);
+                    System.Windows.Forms.MessageBox.Show("Settings saved!");
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show("\"Max temperature\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show("\"Delay\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
+
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("\"Port\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                System.Windows.Forms.MessageBox.Show("\"Max temperature\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
         }
+
 
         //Dashboard
         private void Button_Click_6(object sender, RoutedEventArgs e)

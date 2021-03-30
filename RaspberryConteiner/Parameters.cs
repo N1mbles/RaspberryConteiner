@@ -2,18 +2,6 @@
 {
     public partial class Parameters
     {
-        public static int Port
-        {
-            get
-            {
-                return Properties.Settings.Default.PortAddress;
-            }
-            set
-            {
-                Properties.Settings.Default.PortAddress = value;
-                Properties.Settings.Default.Save();
-            }
-        }
         public static int MaxTemperature
         {
             get

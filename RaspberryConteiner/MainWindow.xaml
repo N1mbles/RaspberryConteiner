@@ -126,7 +126,6 @@
 
             </DockPanel>
 
-            <!--<Label Content="Statistics"  VerticalAlignment="Top" HorizontalAlignment="Center" FontFamily="./#9651" FontSize="30" />-->
             <DataGrid x:Name="grdStats" AutoGenerateColumns="False"  HorizontalAlignment="Center" Grid.RowSpan="3" BorderBrush="{x:Null}" IsReadOnly="True" VerticalScrollBarVisibility="Visible"  Background="LightGray" RowBackground="LightYellow" AlternatingRowBackground="LightBlue" Margin="236,50,235.4,51" >
                 <DataGrid.Columns>
                     <DataGridTextColumn  Header="Name" Width="100" Binding="{Binding UsersName}" />
@@ -145,15 +144,13 @@
         </Grid>
 
         <!-- Settings -->
-        <Grid x:Name="Settingss" Background="#FFDADADA" Margin="219,222,728.6,221.6" Visibility="Hidden">
-            <Label Content="Default Settings" HorizontalAlignment="Left" Margin="100,16,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="18"/>
-            <Label Content="Port" HorizontalAlignment="Left" Margin="29,79,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="14" ToolTip="Set the default connection port on the device"/>
-            <TextBox x:Name="PortAddres" HorizontalAlignment="Left" Height="23" Margin="169,85,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="4" />
-            <Label Content="Delay" HorizontalAlignment="Left" Margin="29,120,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="14" ToolTip="Set the maximum default temperature on the device"/>
-            <TextBox x:Name="Delay" HorizontalAlignment="Left" Height="23" Margin="169,126,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="2" />
-            <Button Content="Save" HorizontalAlignment="Left" Margin="114,226,0,0" VerticalAlignment="Top" Width="75" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Click="Button_Click_5" />
-            <Label Content="Max temperature" HorizontalAlignment="Left" Margin="29,165,0,0" VerticalAlignment="Top" FontFamily="Segoe UI Semibold" FontSize="14" ToolTip="Set the maximum default temperature on the device"/>
-            <TextBox x:Name="MaxTemp" HorizontalAlignment="Left" Height="23" Margin="169,171,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="3" />
+        <Grid x:Name="Settingss" Background="#FFDADADA" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300" Height="250" Margin="100"  Visibility="Visible">
+            <Label Content="Default Settings" HorizontalAlignment="Center" Margin="15" FontFamily="./#9651" FontSize="20"/>
+            <Label Content="Delay" HorizontalAlignment="Left" Margin="43,94,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16" ToolTip="Set the maximum default temperature on the device"/>
+            <TextBox x:Name="Delay" HorizontalAlignment="Left" Height="23" Margin="183,100,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="2" />
+            <Button Content="Save" HorizontalAlignment="Left" Margin="120,200,0,0" VerticalAlignment="Top" Width="75" Background="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" Click="Button_Click_5" />
+            <Label Content="Max temperature" HorizontalAlignment="Left" Margin="43,139,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16" ToolTip="Set the maximum default temperature on the device"/>
+            <TextBox x:Name="MaxTemp" HorizontalAlignment="Left" Height="23" Margin="183,145,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="3" />
         </Grid>
 
         <Image x:Name="Add" Height="49" Margin="22,132,0,0" Visibility="Hidden" Width="49" Source="Image/plus.png" MouseDown="Image_MouseDown_4" ToolTip="Add new Device" MaxWidth="50" MaxHeight="50" HorizontalAlignment="Left" VerticalAlignment="Top"/>

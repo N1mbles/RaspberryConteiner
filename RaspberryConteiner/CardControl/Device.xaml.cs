@@ -218,6 +218,7 @@ namespace RaspberryConteiner.CardControl
             }
             else
             {
+                // Set timer
                 LiveTime = new DispatcherTimer
                 {
                     Interval = new TimeSpan(0, 0, 1)
@@ -239,18 +240,20 @@ namespace RaspberryConteiner.CardControl
 
                                 while (await rdr.ReadAsync())
                                 {
-                                    // Set value on board
-                                    SetValueDB(int.Parse(rdr[4].ToString()), int.Parse(rdr[5].ToString()));
-
                                     //Initialisation only 1 times
                                     if (initTemperature)
                                     {
                                         // string date = DateTime.Now.ToString("yyyy-MM-dd");
                                         CreateStatsAsync(Parameters.CurrentUser, Nplatform, int.Parse(rdr[4].ToString()), DateTime.Now.ToString("yyyy-MM-dd"));
-                                        InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp
-                                                                                        //MySqlCommand cmd2 = new MySqlCommand("INSERT INTO `tempmonitor2`.`Devices` (`InitTemp`) VALUES ('"+ InitTemp.Content + "');", conn);
+                                        InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp                                                        
                                         initTemperature = false;
                                     }
+
+                                    // Set value on board
+                                    SetValueDB(int.Parse(rdr[4].ToString()), int.Parse(rdr[5].ToString()));
+
+                                    //Set background color
+                                    SetBackgroundTemp(int.Parse(rdr[4].ToString()));
 
                                     //
                                     SetStatusDevice(true);
@@ -264,13 +267,14 @@ namespace RaspberryConteiner.CardControl
                                         initTemperature = true;
                                         IsWorking = false; // stop getting temp from database
                                     }
-                                    //Set background color
-                                    SetBackgroundTemp(int.Parse(rdr[4].ToString()));
                                 }
                             }
                         }
                         catch (Exception ex)
                         {
+                            //
+                            SetStatusDevice(false);
+
                             System.Windows.Forms.MessageBox.Show(ex.Message, "Error database", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                         }
                         await Task.Delay(1000 * Parameters.Delay);
@@ -293,12 +297,13 @@ namespace RaspberryConteiner.CardControl
                 try
                 {
                     await conn.OpenAsync();
-                    using (MySqlCommand cmd = new MySqlCommand("INSERT INTO tempmonitor2.Statistics(UsersName, Nplatform, TempStart, DataStart) VALUES (?UsersName,?Nplatform,?TempStart,?DataStart);", conn))
+                    using (MySqlCommand cmd = new MySqlCommand("INSERT INTO tempmonitor2.Statistics(UsersName, Nplatform, TempStart, DataStart, Enrollment) VALUES (?UsersName,?Nplatform,?TempStart,?DataStart,?Enrollment);", conn))
                     {
                         cmd.Parameters.Add("?UsersName", MySqlDbType.VarChar).Value = userName;
                         cmd.Parameters.Add("?Nplatform", MySqlDbType.VarChar).Value = Numplatform;
                         cmd.Parameters.Add("?TempStart", MySqlDbType.Int16).Value = startTemp;
                         cmd.Parameters.Add("?DataStart", MySqlDbType.Date).Value = DateTime.Now.ToString("yyyy-MM-dd");
+                        cmd.Parameters.Add("?Enrollment", MySqlDbType.Byte).Value = "0";
                         await cmd.ExecuteNonQueryAsync();
                         id = cmd.LastInsertedId;
                     }
