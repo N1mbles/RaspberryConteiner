@@ -521,27 +521,27 @@ namespace RaspberryConteiner
                 try
                 {
                     conn.OpenAsync();
-                    string sql = "SELECT * FROM tempmonitor2.Statistics;";
+                    string sql = "SELECT * FROM tempmonitor2.Statistics WHERE Enrollment = 1;";
 
                     if (option == "Last month")
                     {
-                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEAR(date_created) = YEAR(CURRENT_DATE - INTERVAL 1 MONTH) AND MONTH(date_created) = MONTH(CURRENT_DATE - INTERVAL 1 MONTH);";
+                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 1 MONTH AND CURDATE();";
                     }
                     if (option == "Last week")
                     {
-                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE YEARWEEK(date) = YEARWEEK(NOW() - INTERVAL 1 WEEK);";
+                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 1 WEEK AND CURDATE();";
                     }
                     if (option == "Last 3 month")
                     {
-                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 3 month;";
+                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 3 MONTH AND CURDATE();";
                     }
                     if (option == "Half year")
                     {
-                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE timestamp >= now()-interval 6 month;";
+                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 6 MONTH AND CURDATE();";
                     }
                     if (option == "Last Year")
                     {
-                        sql = "SELECT* FROM tempmonitor2.Statistics WHERE order_date >= DATE_SUB(NOW(),INTERVAL 1 YEAR);";
+                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 1 YEAR AND CURDATE();";
                     }
 
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
