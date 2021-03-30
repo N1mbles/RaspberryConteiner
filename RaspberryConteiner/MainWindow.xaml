@@ -122,8 +122,6 @@
                 <DatePicker x:Name="endData"   DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" IsTodayHighlighted="True" Margin="10,14,100,13.4" Width="115" BorderBrush="{x:Null}" Background="{x:Null}"/>
 
                 <Button x:Name="btnApply" Content="Apply" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"  Background="#FF25BED4" BorderBrush="Black" Margin="0,11,0,10.4" Height="29" Foreground="White" FontSize="16" Click="btnApply_Click"/>-->
-
-
             </DockPanel>
 
             <Label x:Name="completedTasks"  Content="Number of completed tasks:" HorizontalAlignment="Left" Margin="15,20.6,0,459.8" Grid.Row="1" FontSize="16" FontFamily="./#9651"/>

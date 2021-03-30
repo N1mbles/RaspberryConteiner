@@ -567,7 +567,7 @@ namespace RaspberryConteiner
 
         private void InfoBest(MySqlConnection connection)
         {
-            using (MySqlCommand cmd = new MySqlCommand("SELECT UsersName FROM tempmonitor2.Statistics GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ", connection))
+            using (MySqlCommand cmd = new MySqlCommand("SELECT UsersName FROM tempmonitor2.Statistics WHERE Enrollment = 1 GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ", connection))
             {
                 //
                 var queryResultName = cmd.ExecuteScalar();
@@ -580,7 +580,7 @@ namespace RaspberryConteiner
                     bestUser.Content = "Most completed tasks: " + "Error"; ;
                 }
                 //
-                cmd.CommandText = "SELECT COUNT(UsersName) FROM tempmonitor2.Statistics GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ";
+                cmd.CommandText = "SELECT COUNT(UsersName) FROM tempmonitor2.Statistics WHERE Enrollment = 1 GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ";
                 var queryResultCount = cmd.ExecuteScalar();
                 if (queryResultCount != null)
                 {
