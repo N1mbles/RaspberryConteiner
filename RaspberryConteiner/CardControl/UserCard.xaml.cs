@@ -1,44 +1,38 @@
-﻿using System;
-using System.Windows.Controls;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace RaspberryConteiner.CardControl
 {
-    /// <summary>
-    /// Логика взаимодействия для UserCard.xaml
-    /// </summary>
-    public partial class UserCard : UserControl
+    public partial class UserCard
     {
         public UserCard()
         {
             InitializeComponent();
         }
 
-        public String NameofUser
+        public string NameofUser
         {
-            get { return NameUser.Content.ToString(); }
-            set { NameUser.Content = value; }
+            get => NameUser.Content.ToString();
+            set => NameUser.Content = value;
         }
 
         private void TestControl_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             SetCurrentUser();
-            System.Windows.Forms.MessageBox.Show("You changed user on: " + NameofUser + "\n     Restart the device!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            System.Windows.Forms.MessageBox.Show(Properties.Resources.UserCard_TestControl_You_changed_user_on__ + NameofUser + Properties.Resources.UserCard_TestControl_Restart_The_device, Properties.Resources.MainWindow_Information, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
         }
         private void SetCurrentUser()
         {
-            MainWindow main = new MainWindow();
-            main.CcurrentUser = NameofUser;
+            Parameters.CurrentUser = NameofUser;
         }
         private void TestControl_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             SetCurrentUser();
-            System.Windows.Forms.MessageBox.Show("You changed user on: " + NameofUser + "\n     Restart the device!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            System.Windows.Forms.MessageBox.Show(Properties.Resources.UserCard_TestControl_You_changed_user_on__ + NameofUser + Properties.Resources.UserCard_TestControl_Restart_The_device, Properties.Resources.MainWindow_Information, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
         }
         private void TestControl_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             SetCurrentUser();
-            System.Windows.Forms.MessageBox.Show("You changed user on: " + NameofUser + "\n     Restart the device!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+            System.Windows.Forms.MessageBox.Show(Properties.Resources.UserCard_TestControl_You_changed_user_on__ + NameofUser + Properties.Resources.UserCard_TestControl_Restart_The_device, Properties.Resources.MainWindow_Information, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
         }
     }
 }

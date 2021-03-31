@@ -117,4 +117,65 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="MainWindow_Button_Click_New_Device_Added_" xml:space="preserve">
+    <value>New Device Added!</value>
+  </data>
+  <data name="MainWindow_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MainWindow_Error_server" xml:space="preserve">
+    <value>Error server</value>
+  </data>
+  <data name="MainWindow_This_name_already_exists_in_the_database_" xml:space="preserve">
+    <value>This name already exists in the database.</value>
+  </data>
+  <data name="MainWindow_Error_adding_new_device" xml:space="preserve">
+    <value>Error adding new device</value>
+  </data>
+  <data name="MainWindow_The_Number_Platform_is_empty" xml:space="preserve">
+    <value>The Number Platform is empty</value>
+  </data>
+  <data name="MainWindow_The_Name_is_empty" xml:space="preserve">
+    <value>The Name is empty</value>
+  </data>
+  <data name="MainWindow_Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="MainWindow_New_User_Added_" xml:space="preserve">
+    <value>New User Added!</value>
+  </data>
+  <data name="MainWindow_Settings_saved_" xml:space="preserve">
+    <value>Settings saved!</value>
+  </data>
+  <data name="MainWindow_Error_export_data" xml:space="preserve">
+    <value>Error export data</value>
+  </data>
+  <data name="MainWindow_You_are_successfully_exported_tour_Data_" xml:space="preserve">
+    <value>You are successfully exported tour Data!</value>
+  </data>
+  <data name="MainWindow_Export_data" xml:space="preserve">
+    <value>Export data</value>
+  </data>
+  <data name="MainWindow_Statistics_is_empty" xml:space="preserve">
+    <value>Statistics is empty</value>
+  </data>
+  <data name="Device_SetTemp_The_field_is_empty" xml:space="preserve">
+    <value>The field is empty</value>
+  </data>
+  <data name="Device_StartGettingTemp_Set_max_temperature" xml:space="preserve">
+    <value>Set max temperature</value>
+  </data>
+  <data name="Device_StartGettingTemp_Error_database" xml:space="preserve">
+    <value>Error database</value>
+  </data>
+  <data name="Device_CreateStatsAsync_DataBase_Error" xml:space="preserve">
+    <value>DataBase Error</value>
+  </data>
+  <data name="UserCard_TestControl_You_changed_user_on__" xml:space="preserve">
+    <value>You changed user on: </value>
+  </data>
+  <data name="UserCard_TestControl_Restart_The_device" xml:space="preserve">
+    <value>
+     Restart the device!</value>
+  </data>
 </root>

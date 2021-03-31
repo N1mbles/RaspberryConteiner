@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RaspberryConteiner
+﻿namespace RaspberryConteiner
 {
    public class InternetConnection
     {

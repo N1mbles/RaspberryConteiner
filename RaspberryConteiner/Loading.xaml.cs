@@ -1,55 +1,56 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace RaspberryConteiner
 {
     /// <summary>
     /// Interaction logic for Loading.xaml
     /// </summary>
-    public partial class Loading : UserControl
+    public partial class Loading
     {
         public int EllipseSize { get; set; } = 8;
-        public int SpinnerHeight { get; set; } = 0;
-        public int SpinnerWidth { get; set; } = 0;
+        public int SpinnerHeight { get; set; }
+        public int SpinnerWidth { get; set; }
 
 
         // start positions
         public EllipseStartPosition EllipseN { get; private set; }
-        public EllipseStartPosition EllipseNE { get; private set; }
+        public EllipseStartPosition EllipseNe { get; private set; }
         public EllipseStartPosition EllipseE { get; private set; }
-        public EllipseStartPosition EllipseSE { get; private set; }
+        public EllipseStartPosition EllipseSe { get; private set; }
         public EllipseStartPosition EllipseS { get; private set; }
-        public EllipseStartPosition EllipseSW { get; private set; }
+        public EllipseStartPosition EllipseSw { get; private set; }
         public EllipseStartPosition EllipseW { get; private set; }
-        public EllipseStartPosition EllipseNW { get; private set; }
+        public EllipseStartPosition EllipseNw { get; private set; }
 
         public Loading()
         {
             InitializeComponent();
         }
 
-        private void initialSetup()
+        private void InitialSetup()
         {
-            float horizontalCenter = (float)(SpinnerWidth / 2);
-            float verticalCenter = (float)(SpinnerHeight / 2);
-            float distance = (float)Math.Min(SpinnerHeight, SpinnerWidth) / 2;
+            // ReSharper disable once PossibleLossOfFraction
+            var horizontalCenter = (float)(SpinnerWidth / 2);
+            // ReSharper disable once PossibleLossOfFraction
+            var verticalCenter = (float)(SpinnerHeight / 2);
+            var distance = (float)Math.Min(SpinnerHeight, SpinnerWidth) / 2;
 
-            double angleInRadians = 44.8;
-            float cosine = (float)Math.Cos(angleInRadians);
-            float sine = (float)Math.Sin(angleInRadians);
+            var angleInRadians = 44.8;
+            var cosine = (float)Math.Cos(angleInRadians);
+            var sine = (float)Math.Sin(angleInRadians);
 
-            EllipseN = newPos(left: horizontalCenter, top: verticalCenter - distance);
-            EllipseNE = newPos(left: horizontalCenter + (distance * cosine), top: verticalCenter - (distance * sine));
-            EllipseE = newPos(left: horizontalCenter + distance, top: verticalCenter);
-            EllipseSE = newPos(left: horizontalCenter + (distance * cosine), top: verticalCenter + (distance * sine));
-            EllipseS = newPos(left: horizontalCenter, top: verticalCenter + distance);
-            EllipseSW = newPos(left: horizontalCenter - (distance * cosine), top: verticalCenter + (distance * sine));
-            EllipseW = newPos(left: horizontalCenter - distance, top: verticalCenter);
-            EllipseNW = newPos(left: horizontalCenter - (distance * cosine), top: verticalCenter - (distance * sine));
+            EllipseN = NewPos(left: horizontalCenter, top: verticalCenter - distance);
+            EllipseNe = NewPos(left: horizontalCenter + (distance * cosine), top: verticalCenter - (distance * sine));
+            EllipseE = NewPos(left: horizontalCenter + distance, top: verticalCenter);
+            EllipseSe = NewPos(left: horizontalCenter + (distance * cosine), top: verticalCenter + (distance * sine));
+            EllipseS = NewPos(left: horizontalCenter, top: verticalCenter + distance);
+            EllipseSw = NewPos(left: horizontalCenter - (distance * cosine), top: verticalCenter + (distance * sine));
+            EllipseW = NewPos(left: horizontalCenter - distance, top: verticalCenter);
+            EllipseNw = NewPos(left: horizontalCenter - (distance * cosine), top: verticalCenter - (distance * sine));
         }
 
-        private EllipseStartPosition newPos(float left, float top)
+        private static EllipseStartPosition NewPos(float left, float top)
         {
             return new EllipseStartPosition() { Left = left, Top = top };
         }
@@ -57,19 +58,19 @@ namespace RaspberryConteiner
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
-            if (e.Property.Name == "Height")
+            switch (e.Property.Name)
             {
-                SpinnerHeight = Convert.ToInt32(e.NewValue);
-            }
-
-            if (e.Property.Name == "Width")
-            {
-                SpinnerWidth = Convert.ToInt32(e.NewValue);
+                case "Height":
+                    SpinnerHeight = Convert.ToInt32(e.NewValue);
+                    break;
+                case "Width":
+                    SpinnerWidth = Convert.ToInt32(e.NewValue);
+                    break;
             }
 
             if (SpinnerHeight > 0 && SpinnerWidth > 0)
             {
-                initialSetup();
+                InitialSetup();
             }
 
             base.OnPropertyChanged(e);

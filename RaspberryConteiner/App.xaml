@@ -5,7 +5,7 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            <BitmapImage x:Key="man" UriSource="\Avatars\009-man.png"></BitmapImage>
+            <BitmapImage x:Key="Man" UriSource="\Avatars\009-man.png"></BitmapImage>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

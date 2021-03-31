@@ -61,7 +61,7 @@
                 <!-- Block(right side) The maximum temp is set -->
                 <Rectangle Fill="Black" HorizontalAlignment="Left" Height="47" Margin="283,77,0,0" VerticalAlignment="Top" Width="109" RadiusX="13" RadiusY="13" MouseDown="Rectangle_MouseDown_1" />
                 <Label Content="°C" HorizontalAlignment="Left" Margin="366,75,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651" />
-                <TextBox x:Name="SetTemp" Text="" HorizontalAlignment="Left" Height="20" Margin="322,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="32" Background="{x:Null}" Foreground="White" FontFamily="./#9651" FontSize="18" BorderBrush="{x:Null}" SelectionBrush="#FF59B032" ToolTip="Setting the maximum temperature value" PreviewTextInput="OnPreviewTextInput" KeyDown="SetTemp_KeyDown" />
+                <TextBox x:Name="SetTemp" Text="" HorizontalAlignment="Left" Height="20" Margin="322,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="32" Background="{x:Null}" Foreground="White" FontFamily="./#9651" FontSize="18" BorderBrush="{x:Null}" SelectionBrush="#FF59B032" ToolTip="Setting the maximum temperature value" PreviewTextInput="OnPreviewTextInput" KeyDown="SetTemp_KeyDown" MaxLength="3" />
 
                 <!-- Footer-->
                 <Grid x:Name="Footer" Margin="0,150,0,0">

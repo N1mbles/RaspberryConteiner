@@ -14,17 +14,10 @@ namespace RaspberryConteiner.Helpers
         public static bool CheckExists(MySqlConnection connection, string sqlRequest)
         {
            // connection.OpenAsync();
-            using (MySqlCommand cmd = new MySqlCommand(sqlRequest, connection))
+            using (var cmd = new MySqlCommand(sqlRequest, connection))
             {
                 var result = Convert.ToInt32(cmd.ExecuteScalar());
-                if (result > 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return result > 0;
             }
         }
 

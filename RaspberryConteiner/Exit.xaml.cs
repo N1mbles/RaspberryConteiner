@@ -2,11 +2,7 @@
 
 namespace RaspberryConteiner
 {
-    /// <summary>
-    /// Логика взаимодействия для Exit.xaml
-    /// </summary>
-    /// 
-    public partial class Exit : Window
+    public partial class Exit
     {    
         public Exit()
         {

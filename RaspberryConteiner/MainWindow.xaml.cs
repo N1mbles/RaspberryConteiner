@@ -12,16 +12,14 @@ namespace RaspberryConteiner
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow
     {
         // Status Dashboard
-        private bool isDevices = false;
-        private bool isUsers = false;
-        public string CcurrentUser { get; set; }
+        private bool _isDevices;
+        private bool _isUsers;
 
         //Table with statistics
-        System.Data.DataTable stats;
-
+        System.Data.DataTable _stats;
 
         public MainWindow()
         {
@@ -31,7 +29,7 @@ namespace RaspberryConteiner
             ListDevice.Visibility = Visibility.Visible;
             // Enable icon "Add"
             Add.Visibility = Visibility.Visible;
-            isDevices = true;
+            _isDevices = true;
             //Set default max temperature
             MaxTemp.Text = Parameters.MaxTemperature.ToString();
             //Set default delay
@@ -54,16 +52,16 @@ namespace RaspberryConteiner
         private void InitUsers()
         {
             // Show current user in system
-            _CurrentUser.Text = Parameters.CurrentUser;
+            CurrentUser.Text = Parameters.CurrentUser;
 
-            using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
+            using (var conn = new MySqlConnection(Parameters.ConnStr))
             {
                 try
                 {
                     conn.Open();
-                    using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Users;", conn))
+                    using (var cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Users;", conn))
                     {
-                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        var rdr = cmd.ExecuteReader();
 
                         while (rdr.Read())
                         {
@@ -74,86 +72,37 @@ namespace RaspberryConteiner
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.MainWindow_Error, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
             }
         }
 
         private void InitDevices()
         {
-            using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
+            using (var conn = new MySqlConnection(Parameters.ConnStr))
             {
                 try
                 {
                     conn.Open();
 
-                    using (MySqlCommand cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices;", conn))
+                    using (var cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices;", conn))
                     {
-                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        var rdr = cmd.ExecuteReader();
 
                         while (rdr.Read())
                         {
-                            AddOneDevice(rdr[1].ToString(), rdr[2].ToString(), int.Parse(rdr[5].ToString())); ;
+                            AddOneDevice(rdr[1].ToString(), rdr[2].ToString(), int.Parse(rdr[5].ToString()));
                         }
                         rdr.Close();
                     }
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.MainWindow_Error, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
             }
         }
-        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            MessageBox.Show("Test");
-        }
-        /// <summary>
-        /// Users
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Image_MouseDown_1(object sender, MouseButtonEventArgs e)
-        {
-            // Show icon Add
-            Add.Visibility = Visibility.Visible;
-            //
-            isDevices = false;
-            isUsers = true;
-            //Hide settings
-            Settingss.Visibility = Visibility.Hidden;
-            //Visible panel of users
-            ListDevice.Visibility = Visibility.Hidden;
-            ListOfUsers.Visibility = Visibility.Visible;
-            // AddOneUser();
-        }
 
-        /// <summary>
-        /// Devices
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Image_MouseDown_2(object sender, MouseButtonEventArgs e)
-        {
-            //
-            Add.Visibility = Visibility.Visible;
-            //
-            isUsers = false;
-            isDevices = true;
-            //
-            Settingss.Visibility = Visibility.Hidden;
-            //
-            ListDevice.Visibility = Visibility.Visible;
-            ListOfUsers.Visibility = Visibility.Hidden;
-
-            // AddOneDevice();
-        }
-
-        private void Quit_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Exit exit = new Exit();
-            exit.Show();
-        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
@@ -165,17 +114,15 @@ namespace RaspberryConteiner
         /// <param name="e"></param>
         private void Image_MouseDown_4(object sender, MouseButtonEventArgs e)
         {
-            if (isDevices)
+            if (_isDevices)
             {
                 ListDevice.Visibility = Visibility.Hidden;
                 AddNewItem.Visibility = Visibility.Visible;
             }
 
-            if (isUsers)
-            {
-                ListOfUsers.Visibility = Visibility.Hidden;
-                AddNewUser.Visibility = Visibility.Visible;
-            }
+            if (!_isUsers) return;
+            ListOfUsers.Visibility = Visibility.Hidden;
+            AddNewUser.Visibility = Visibility.Visible;
 
         }
         /// <summary>
@@ -185,16 +132,14 @@ namespace RaspberryConteiner
         /// <param name="e"></param>
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Escape)
-            {
-                Exit exit = new Exit();
-                exit.Show();
-            }
+            if (e.Key != Key.Escape) return;
+            var exit = new Exit();
+            exit.Show();
         }
         public string NameDevice
         {
-            get { return NameOfDevice.Text; }
-            set { NameOfDevice.Text = value; }
+            get => NameOfDevice.Text;
+            set => NameOfDevice.Text = value;
         }
 
         /// <summary>
@@ -208,26 +153,27 @@ namespace RaspberryConteiner
             {
                 if (NumberPlatform.Text.Length != 0)
                 {
-                    using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
+                    using (var conn = new MySqlConnection(Parameters.ConnStr))
                     {
                         conn.OpenAsync();
                         if (Helpers.MySqlHelper.CheckExists(conn, "SELECT COUNT(*) FROM `tempmonitor2`.`Devices` WHERE Name = '" + NameDevice + "';"))
                         {
-                            System.Windows.Forms.MessageBox.Show("This name already exists in the database.", "Error server", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                            System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_This_name_already_exists_in_the_database_, Properties.Resources.MainWindow_Error_server, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                         }
                         else
                         {
                             try
                             {
-                                using (MySqlCommand cmd = new MySqlCommand("INSERT INTO tempmonitor2.Devices (Name, NPlatform) VALUES (@NameDevice,@NumberPlatform); ", conn))
+                                using (var cmd = new MySqlCommand("INSERT INTO tempmonitor2.Devices (Name, NPlatform, MaxTemp) VALUES (@NameDevice,@NumberPlatform,@MaxTemp); ", conn))
                                 {
                                     cmd.Parameters.AddWithValue("@NameDevice", NameDevice);
                                     cmd.Parameters.AddWithValue("@NumberPlatform", NumberPlatform.Text);
+                                    cmd.Parameters.AddWithValue("@MaxTemp", Parameters.MaxTemperature);
                                     cmd.ExecuteNonQueryAsync();
 
                                     AddOneDevice(NameDevice, NumberPlatform.Text);
 
-                                    System.Windows.Forms.MessageBox.Show("New Device Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                                    System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_Button_Click_New_Device_Added_, Properties.Resources.MainWindow_Information, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
 
                                     //Hide from
                                     AddNewItem.Visibility = Visibility.Hidden;
@@ -240,19 +186,19 @@ namespace RaspberryConteiner
                             }
                             catch (Exception ex)
                             {
-                                System.Windows.Forms.MessageBox.Show(ex.Message, "Error server", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                                System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.MainWindow_Error_server, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                             }
                         }
                     }
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show("The Number Platform is empty", "Error adding new device", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_The_Number_Platform_is_empty, Properties.Resources.MainWindow_Error_adding_new_device, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("The Name is empty", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_The_Name_is_empty, Properties.Resources.MainWindow_Error, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
         }
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -269,19 +215,19 @@ namespace RaspberryConteiner
         {
             if (NameOfUser.Text.Length != 0)
             {
-                using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
+                using (var conn = new MySqlConnection(Parameters.ConnStr))
                 {
                     conn.Open();
 
                     if (Helpers.MySqlHelper.CheckExists(conn, "SELECT COUNT(*) FROM `tempmonitor2`.`Users` WHERE Name = '" + NameOfUser.Text + "';"))
                     {
-                        System.Windows.Forms.MessageBox.Show("This name already exists in the database.", "Error server", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                        System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_This_name_already_exists_in_the_database_, Properties.Resources.MainWindow_Error_server, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                     }
                     else
                     {
                         try
                         {
-                            using (MySqlCommand cmd = new MySqlCommand("INSERT INTO tempmonitor2.Users (Name) VALUES (@User);", conn))
+                            using (var cmd = new MySqlCommand("INSERT INTO tempmonitor2.Users (Name) VALUES (@User);", conn))
                             {
                                 cmd.Parameters.AddWithValue("@User", NameOfUser.Text);
                                 cmd.ExecuteNonQueryAsync();
@@ -290,21 +236,21 @@ namespace RaspberryConteiner
 
                                 AddNewUser.Visibility = Visibility.Hidden;
                                 ListOfUsers.Visibility = Visibility.Visible;
-                                System.Windows.Forms.MessageBox.Show("New User Added!", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                                System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_New_User_Added_, Properties.Resources.MainWindow_Information, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
 
                                 NameOfUser.Text = string.Empty;
                             }
                         }
                         catch (Exception ex)
                         {
-                            System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                            System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.MainWindow_Error, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                         }
                     }
                 }
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("The Name is empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_The_Name_is_empty, Properties.Resources.MainWindow_Information, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
             }
         }
 
@@ -318,40 +264,15 @@ namespace RaspberryConteiner
             AddNewUser.Visibility = Visibility.Hidden;
             ListOfUsers.Visibility = Visibility.Visible;
         }
-        /// <summary>
-        /// Show settings
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Settings_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Add.Visibility = Visibility.Hidden;
 
-            Settingss.Visibility = Visibility.Visible;
-
-            ListOfUsers.Visibility = Visibility.Hidden;
-            ListDevice.Visibility = Visibility.Hidden;
-
-            AddNewItem.Visibility = Visibility.Hidden;
-            AddNewUser.Visibility = Visibility.Hidden;
-
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(CcurrentUser))
-            {
-                Parameters.CurrentUser = CcurrentUser;
-            }
-        }
         #region Methods
+
         /// <summary>
         /// Add new users
         /// </summary>
-        /// <param name="count"> Count of users</param>
         private void AddOneUser(string name)
         {
-            UserCard users = new UserCard
+            var users = new UserCard
             {
                 Width = Parameters.UserWidth,
                 Height = Parameters.UserHeight,
@@ -367,10 +288,9 @@ namespace RaspberryConteiner
         /// <summary>
         /// Add new devices
         /// </summary>
-        /// <param name="count"> Count of users</param>
         private void AddOneDevice(string nameOfDevice, string nameOfPlatform, int maxTemp = 80)
         {
-            Device device = new Device
+            var device = new Device
             {
                 Width = Convert.ToInt32("400"),
                 Height = Convert.ToInt32("180"),
@@ -386,15 +306,13 @@ namespace RaspberryConteiner
         #endregion
 
         #region Input only numeric method
-        void OnPreviewTextInput(object sender, TextCompositionEventArgs e)
+        private void OnPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !e.Text.All(IsGood);
         }
-        bool IsGood(char c)
+        private static bool IsGood(char c)
         {
-            if (c >= '0' && c <= '9')
-                return true;
-            return false;
+            return c >= '0' && c <= '9';
         }
         #endregion
 
@@ -405,25 +323,9 @@ namespace RaspberryConteiner
         /// <param name="e"></param>
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-
-            if (MaxTemp.Text != null)
-            {
-                if (Delay.Text != null)
-                {
-                    Parameters.MaxTemperature = int.Parse(MaxTemp.Text);
-                    Parameters.Delay = int.Parse(Delay.Text);
-                    System.Windows.Forms.MessageBox.Show("Settings saved!");
-                }
-                else
-                {
-                    System.Windows.Forms.MessageBox.Show("\"Delay\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                }
-
-            }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("\"Max temperature\" сannot be empty", "Information", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-            }
+            Parameters.MaxTemperature = int.Parse(MaxTemp.Text);
+            Parameters.Delay = int.Parse(Delay.Text);
+            System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_Settings_saved_);
         }
 
 
@@ -433,8 +335,8 @@ namespace RaspberryConteiner
             //
             Add.Visibility = Visibility.Visible;
             //
-            isUsers = false;
-            isDevices = true;
+            _isUsers = false;
+            _isDevices = true;
             //
             Settingss.Visibility = Visibility.Hidden;
             //
@@ -449,8 +351,8 @@ namespace RaspberryConteiner
             // Show icon Add
             Add.Visibility = Visibility.Visible;
             //
-            isDevices = false;
-            isUsers = true;
+            _isDevices = false;
+            _isUsers = true;
             //Hide settings
             Settingss.Visibility = Visibility.Hidden;
             //Visible panel of users
@@ -501,7 +403,7 @@ namespace RaspberryConteiner
         // Shutdown
         private void Button_Click_10(object sender, RoutedEventArgs e)
         {
-            Exit exit = new Exit();
+            var exit = new Exit();
             exit.Show();
         }
         /// <summary>
@@ -511,84 +413,82 @@ namespace RaspberryConteiner
         /// <param name="e"></param>
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            cbxInterval.Text = string.Empty;
+            CbxInterval.Text = string.Empty;
             GetStats();
         }
         private void GetStats(string option = null)
         {
-            using (MySqlConnection conn = new MySqlConnection(Parameters.connStr))
+            using (var conn = new MySqlConnection(Parameters.ConnStr))
             {
                 try
                 {
                     conn.OpenAsync();
-                    string sql = "SELECT * FROM tempmonitor2.Statistics WHERE Enrollment = 1;";
+                    var sql = "SELECT * FROM tempmonitor2.Statistics WHERE Enrollment = 1;";
 
-                    if (option == "Last month")
+                    switch (option)
                     {
-                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 1 MONTH AND CURDATE();";
-                    }
-                    if (option == "Last week")
-                    {
-                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 1 WEEK AND CURDATE();";
-                    }
-                    if (option == "Last 3 month")
-                    {
-                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 3 MONTH AND CURDATE();";
-                    }
-                    if (option == "Half year")
-                    {
-                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 6 MONTH AND CURDATE();";
-                    }
-                    if (option == "Last Year")
-                    {
-                        sql = "SELECT * FROM tempmonitor2.Statistics  WHERE DataEnd BETWEEN CURDATE()-INTERVAL 1 YEAR AND CURDATE();";
+                        case "Last month":
+                            sql = "SELECT * FROM tempmonitor2.Statistics  WHERE Enrollment = 1 or DataEnd BETWEEN CURDATE()-INTERVAL 1 MONTH AND CURDATE();";
+                            break;
+                        case "Last week":
+                            sql = "SELECT * FROM tempmonitor2.Statistics  WHERE Enrollment = 1 or DataEnd BETWEEN CURDATE()-INTERVAL 1 WEEK AND CURDATE();";
+                            break;
+                        case "Last 3 month":
+                            sql = "SELECT * FROM tempmonitor2.Statistics  WHERE Enrollment = 1 or DataEnd BETWEEN CURDATE()-INTERVAL 3 MONTH AND CURDATE();";
+                            break;
+                        case "Half year":
+                            sql = "SELECT * FROM tempmonitor2.Statistics  WHERE Enrollment = 1 or DataEnd BETWEEN CURDATE()-INTERVAL 6 MONTH AND CURDATE();";
+                            break;
+                        case "Last Year":
+                            sql = "SELECT * FROM tempmonitor2.Statistics  WHERE Enrollment = 1 or DataEnd BETWEEN CURDATE()-INTERVAL 1 YEAR AND CURDATE();";
+                            break;
                     }
 
-                    using (MySqlCommand cmd = new MySqlCommand(sql, conn))
+                    using (var cmd = new MySqlCommand(sql, conn))
                     {
-                        MySqlDataAdapter sda = new MySqlDataAdapter(cmd);
+                        var sda = new MySqlDataAdapter(cmd);
 
-                        stats = new System.Data.DataTable("Statistics");
+                        _stats = new System.Data.DataTable("Statistics");
 
-                        sda.FillAsync(stats);
-                        grdStats.ItemsSource = stats.DefaultView;
+                        sda.FillAsync(_stats);
+                        GrdStats.ItemsSource = _stats.DefaultView;
 
                         //Show stats
                         InfoBest(conn);
-                        completedTasks.Content = "Number of completed tasks: " + stats.DefaultView.Count.ToString();
+                        CompletedTasks.Content = "Number of completed tasks: " + _stats.DefaultView.Count.ToString();
                     }
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show(ex.Message, "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.MainWindow_Error, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
             }
         }
 
         private void InfoBest(MySqlConnection connection)
         {
-            using (MySqlCommand cmd = new MySqlCommand("SELECT UsersName FROM tempmonitor2.Statistics WHERE Enrollment = 1 GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ", connection))
+            using (var cmd = new MySqlCommand("SELECT UsersName FROM tempmonitor2.Statistics WHERE Enrollment = 1 GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ", connection))
             {
-                //
+                // Get name 
                 var queryResultName = cmd.ExecuteScalar();
                 if (queryResultName != null)
                 {
-                    bestUser.Content = "Most completed tasks: " + queryResultName.ToString();
+                    BestUser.Content = "Most completed tasks: " + queryResultName;
                 }
                 else
                 {
-                    bestUser.Content = "Most completed tasks: " + "Error"; ;
+                    BestUser.Content = "Most completed tasks: " + Properties.Resources.MainWindow_Error;
                 }
-                //
+                // Get count of name 
                 cmd.CommandText = "SELECT COUNT(UsersName) FROM tempmonitor2.Statistics WHERE Enrollment = 1 GROUP BY UsersName ORDER BY COUNT(*) DESC LIMIT 1; ";
                 var queryResultCount = cmd.ExecuteScalar();
                 if (queryResultCount != null)
                 {
-                    bestUserCount.Content = "Count: " + queryResultCount.ToString();
+                    BestUserCount.Content = "Count: " + queryResultCount;
                 }
                 else
                 {
-                    bestUserCount.Content = "Count: " + "Error";
+                    BestUserCount.Content = "Count: " + Properties.Resources.MainWindow_Error;
                 }
             }
         }
@@ -600,47 +500,49 @@ namespace RaspberryConteiner
         /// <param name="e"></param>
         private void Button_Click_11(object sender, RoutedEventArgs e)
         {
-            if (stats != null)
+            if (_stats != null)
             {
-                SaveFileDialog openDlg = new SaveFileDialog();
-                openDlg.FileName = "Statistics";
-                openDlg.Filter = "Excel (.xls)|*.xls |Excel (.xlsx)|*.xlsx |All files (*.*)|*.*";
-                openDlg.FilterIndex = 2;
-                openDlg.RestoreDirectory = true;
-                openDlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var openDlg = new SaveFileDialog
+                {
+                    FileName = "Statistics",
+                    Filter = "Excel (.xls)|*.xls |Excel (.xlsx)|*.xlsx |All files (*.*)|*.*",
+                    FilterIndex = 2,
+                    RestoreDirectory = true,
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                };
 
                 if (openDlg.ShowDialog() == true)
                 {
                     try
                     {
-                        using (XLWorkbook workbook = new XLWorkbook())
+                        using (var workbook = new XLWorkbook())
                         {
-                            workbook.Worksheets.Add(stats, "Statistics"); // Create new xlmsx document, Get data from DataTable
+                            workbook.Worksheets.Add(_stats, "Statistics"); // Create new xlmsx document, Get data from DataTable
                             workbook.SaveAs(openDlg.FileName);
                         }
-                        System.Windows.Forms.MessageBox.Show("You are successfully exported tour Data!", "Export data", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
+                        System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_You_are_successfully_exported_tour_Data_, Properties.Resources.MainWindow_Export_data, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        System.Windows.Forms.MessageBox.Show(ex.Message, "Error export data", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                        System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.MainWindow_Error_export_data, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                     }
                 }
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("Statistics is empty", "Error export data", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_Statistics_is_empty, Properties.Resources.MainWindow_Error_export_data, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
             }
         }
 
         private void cbxInterval_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (cbxInterval.SelectedValue == null)
+            if (CbxInterval.SelectedValue == null)
             {
                 return;
             }
-            var value = cbxInterval.SelectedValue.ToString();
+            var value = CbxInterval.SelectedValue.ToString();
 
-            string result = value.Replace("System.Windows.Controls.ComboBoxItem: ", "");
+            var result = value.Replace("System.Windows.Controls.ComboBoxItem: ", "");
             GetStats(result);
 
         }
@@ -649,8 +551,8 @@ namespace RaspberryConteiner
             // Show icon Add
             Add.Visibility = Visibility.Visible;
             //
-            isDevices = false;
-            isUsers = true;
+            _isDevices = false;
+            _isUsers = true;
             //Hide settings
             Settingss.Visibility = Visibility.Hidden;
             //Visible panel of users

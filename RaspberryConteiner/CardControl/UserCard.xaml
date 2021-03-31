@@ -16,11 +16,11 @@
         </Border>
         <Grid x:Name="Back" Margin="0,10,0,0.4" >
             <Border x:Name="UserBackground" Margin="0,10,0,80">
-                <Ellipse x:Name="backgroundImage"  HorizontalAlignment="Left" Height="224.196" Margin="35.79,0,0,-24.196" VerticalAlignment="Center" Width="237.898" Fill="#FF6AD9F4" UseLayoutRounding="False"/>
+                <Ellipse x:Name="BackgroundImage"  HorizontalAlignment="Left" Height="224.196" Margin="35.79,0,0,-24.196" VerticalAlignment="Center" Width="237.898" Fill="#FF6AD9F4" UseLayoutRounding="False"/>
             </Border>
         </Grid>
         
-        <Border x:Name="userImage" Margin="0,10,10,87">
+        <Border x:Name="UserImage" Margin="0,10,10,87">
             <Ellipse HorizontalAlignment="Left" Height="193" Margin="58,16,0,-5.8" VerticalAlignment="Center" Width="192">
                 <Ellipse.Fill>
                     <ImageBrush>

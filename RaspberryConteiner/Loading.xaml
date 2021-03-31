@@ -258,13 +258,13 @@
                                     </Canvas.Resources>
 
                                     <Ellipse x:Name="ellipseN" Canvas.Left="{Binding Path=EllipseN.Left}" Canvas.Top="{Binding Path=EllipseN.Top}"/>
-                                    <Ellipse x:Name="ellipseNE" Canvas.Left="{Binding Path=EllipseNE.Left}" Canvas.Top="{Binding Path=EllipseNE.Top}"/>
+                                    <Ellipse x:Name="ellipseNE" Canvas.Left="{Binding Path=EllipseNe.Left}" Canvas.Top="{Binding Path=EllipseNe.Top}"/>
                                     <Ellipse x:Name="ellipseE" Canvas.Left="{Binding Path=EllipseE.Left}" Canvas.Top="{Binding Path=EllipseE.Top}"/>
-                                    <Ellipse x:Name="ellipseSE" Canvas.Left="{Binding Path=EllipseSE.Left}" Canvas.Top="{Binding Path=EllipseSE.Top}"/>
+                                    <Ellipse x:Name="ellipseSE" Canvas.Left="{Binding Path=EllipseSe.Left}" Canvas.Top="{Binding Path=EllipseSe.Top}"/>
                                     <Ellipse x:Name="ellipseS" Canvas.Left="{Binding Path=EllipseS.Left}" Canvas.Top="{Binding Path=EllipseS.Top}"/>
-                                    <Ellipse x:Name="ellipseSW" Canvas.Left="{Binding Path=EllipseSW.Left}" Canvas.Top="{Binding Path=EllipseSW.Top}"/>
+                                    <Ellipse x:Name="ellipseSW" Canvas.Left="{Binding Path=EllipseSw.Left}" Canvas.Top="{Binding Path=EllipseSw.Top}"/>
                                     <Ellipse x:Name="ellipseW" Canvas.Left="{Binding Path=EllipseW.Left}" Canvas.Top="{Binding Path=EllipseW.Top}"/>
-                                    <Ellipse x:Name="ellipseNW" Canvas.Left="{Binding Path=EllipseNW.Left}" Canvas.Top="{Binding Path=EllipseNW.Top}"/>
+                                    <Ellipse x:Name="ellipseNW" Canvas.Left="{Binding Path=EllipseNw.Left}" Canvas.Top="{Binding Path=EllipseNw.Top}"/>
 
                                 </Canvas>
                                 <Label Content="{Binding Path=Text}" HorizontalAlignment="Center" VerticalAlignment="Center"/>

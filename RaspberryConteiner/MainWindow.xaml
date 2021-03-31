@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        xmlns:local="clr-namespace:RaspberryConteiner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="804" Width="1260" Loaded="Window_Loaded" WindowStyle="None" KeyDown="Window_KeyDown" WindowState="Maximized" WindowStartupLocation="CenterOwner" Closing="Window_Closing" Foreground="{x:Null}">
+        Title="MainWindow" Height="804" Width="1260" Loaded="Window_Loaded" WindowStyle="None" KeyDown="Window_KeyDown" WindowState="Maximized" WindowStartupLocation="CenterOwner" Foreground="{x:Null}">
 
     <!-- Button style -->
     <Window.Resources>
@@ -44,7 +44,7 @@
                     <Image Source="Image/gear.png" />
                 </Button>
 
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="_CurrentUser"  Text=""  Height="40" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="20" MouseDown="_CurrentUser_MouseDown" />
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="CurrentUser"  Text=""  Height="40" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="20" MouseDown="_CurrentUser_MouseDown" />
 
             </DockPanel>
         </Grid>
@@ -108,7 +108,7 @@
 
                 <Label DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Filter" Height="29" Margin="35,11,0,10.4" FontFamily="./#9651" FontSize="16" Width="45"/>
 
-                <ComboBox x:Name="cbxInterval" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" Height="29" Margin="5,11,0,10.4" SelectionChanged="cbxInterval_SelectionChanged" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="16">
+                <ComboBox x:Name="CbxInterval" DockPanel.Dock="Left" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" Height="29" Margin="5,11,0,10.4" SelectionChanged="cbxInterval_SelectionChanged" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="16">
                     <ComboBoxItem Content="Last week"></ComboBoxItem>
                     <ComboBoxItem Content="Last month"></ComboBoxItem>
                     <ComboBoxItem Content="Last 3 month"></ComboBoxItem>
@@ -124,13 +124,13 @@
                 <Button x:Name="btnApply" Content="Apply" HorizontalAlignment="Left" VerticalAlignment="Center" Width="70"  Background="#FF25BED4" BorderBrush="Black" Margin="0,11,0,10.4" Height="29" Foreground="White" FontSize="16" Click="btnApply_Click"/>-->
             </DockPanel>
 
-            <Label x:Name="completedTasks"  Content="Number of completed tasks:" HorizontalAlignment="Left" Margin="15,20.6,0,459.8" Grid.Row="1" FontSize="16" FontFamily="./#9651"/>
+            <Label x:Name="CompletedTasks"  Content="Number of completed tasks:" HorizontalAlignment="Left" Margin="15,20.6,0,459.8" Grid.Row="1" FontSize="16" FontFamily="./#9651"/>
 
-            <Label x:Name="bestUser"  Content="Most completed tasks:" HorizontalAlignment="Left" Margin="15,77.6,0,402.8" Grid.Row="1" FontSize="16" FontFamily="./#9651"/>
-            <Label x:Name="bestUserCount"  Content="Count:" HorizontalAlignment="Left" Margin="126,115.6,0,364.8" Grid.Row="1" FontSize="16" FontFamily="./#9651"/>
+            <Label x:Name="BestUser"  Content="Most completed tasks:" HorizontalAlignment="Left" Margin="15,77.6,0,402.8" Grid.Row="1" FontSize="16" FontFamily="./#9651"/>
+            <Label x:Name="BestUserCount"  Content="Count:" HorizontalAlignment="Left" Margin="126,115.6,0,364.8" Grid.Row="1" FontSize="16" FontFamily="./#9651"/>
 
 
-            <DataGrid x:Name="grdStats" AutoGenerateColumns="False"  HorizontalAlignment="Center" Grid.RowSpan="3" BorderBrush="{x:Null}" IsReadOnly="True" VerticalScrollBarVisibility="Visible"  Background="LightGray" RowBackground="LightYellow" AlternatingRowBackground="LightBlue" Margin="347,50,202.6,51" >
+            <DataGrid x:Name="GrdStats" AutoGenerateColumns="False"  HorizontalAlignment="Center" Grid.RowSpan="3" BorderBrush="{x:Null}" IsReadOnly="True" VerticalScrollBarVisibility="Visible"  Background="LightGray" RowBackground="LightYellow" AlternatingRowBackground="LightBlue" Margin="347,50,202.6,51" >
                 <DataGrid.Columns>
                     <DataGridTextColumn  Header="Name" Width="100" Binding="{Binding UsersName}" />
                     <DataGridTextColumn  Header="№ Platform" Width="130" Binding="{Binding Nplatform}" />
