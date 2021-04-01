@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Media;
@@ -25,15 +26,19 @@ namespace RaspberryConteiner.CardControl
         private DispatcherTimer _liveTime;
         private Stopwatch _stopwatch;
 
+        private List<Statistics> statistics = new List<Statistics>();
+
         #region Variable
         //UP TIME variable
         private bool _isCompleted = false;
+
+        //One reset
+        private bool _clickReset = true;
 
         // Only one click for start
         private bool _clickOne = true;
 
         private bool _isWorking = true;
-        private long _id;
         private int _iMaxTemp;
         public string NameofDevice
         {
@@ -168,7 +173,7 @@ namespace RaspberryConteiner.CardControl
             else
             {
                 _stopwatch = new Stopwatch();
-                _liveTime = new DispatcherTimer(DispatcherPriority.Render) {Interval = new TimeSpan(0, 0, 1)};
+                _liveTime = new DispatcherTimer(DispatcherPriority.Render) { Interval = new TimeSpan(0, 0, 1) };
                 _liveTime.Tick += Ticks;
 
                 _stopwatch.Start();
@@ -188,13 +193,15 @@ namespace RaspberryConteiner.CardControl
                                 cmd.Parameters.AddWithValue("@Nplatform", Nplatform);
 
                                 var rdr = (MySqlDataReader)await cmd.ExecuteReaderAsync();
+                                //
+                                _clickReset = true;
 
                                 while (await rdr.ReadAsync())
                                 {
                                     //Initialization only 1 times
                                     if (_initTemperature)
                                     {
-                                        CreateStatsAsync(Parameters.CurrentUser, Nplatform, int.Parse(rdr[4].ToString()));
+                                        statistics.Add(new Statistics { UserName = Parameters.CurrentUser, Nplatform = Nplatform, TempStart = Convert.ToInt16(rdr[4]), TempEnd = 0, DataStart = DateTime.Now, DataEnd = DateTime.Now, UpTime = "00:00:00", Enrollment = 0 });
                                         InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp                                                        
                                         _initTemperature = false;
                                     }
@@ -211,14 +218,21 @@ namespace RaspberryConteiner.CardControl
                                     //When temp it reached the specified
                                     if (int.Parse(rdr[4].ToString()) >= _iMaxTemp)
                                     {
-                                        if (_stopwatch.ElapsedTicks > 1)
+                                        _liveTime.Stop();
+                                        _stopwatch.Stop();
+                                        //
+                                        if (_stopwatch.Elapsed.Seconds > 1)
                                         {
-                                            CompletedsStats(int.Parse(rdr[4].ToString()), LiveTimes.Content.ToString());
+                                            statistics[0].TempEnd = Convert.ToInt16(rdr[4]);
+                                            statistics[0].DataEnd = DateTime.Now;
+                                            statistics[0].UpTime = LiveTimes.Content.ToString();
+                                            statistics[0].Enrollment = 1;
+
+                                            CompletedStats(statistics[0].UserName, statistics[0].Nplatform,
+                                                statistics[0].TempStart, statistics[0].TempEnd, statistics[0].DataStart,
+                                                statistics[0].DataEnd, statistics[0].UpTime, statistics[0].Enrollment);
                                             _isCompleted = true;
                                         }
-
-                                        _liveTime.Stop();
-                                        _stopwatch.Reset();
                                         NotificationEndProcess();
                                         _initTemperature = true;
                                         _isWorking = false; // stop getting temp from database
@@ -226,7 +240,7 @@ namespace RaspberryConteiner.CardControl
                                 }
                             }
                         }
-                        catch (Exception ex)
+                        catch (MySqlException ex)
                         {
                             //
                             SetStatusDevice(false);
@@ -245,60 +259,37 @@ namespace RaspberryConteiner.CardControl
         }
 
         /// <summary>
-        /// Create statistics
+        /// Write statistics to Database
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="numPlatform"></param>
         /// <param name="startTemp"></param>
-        private async void CreateStatsAsync(string userName, string numPlatform, int startTemp = 0)
-        {
-            using (var conn = new MySqlConnection(Parameters.ConnStr))
-            {
-                try
-                {
-                    await conn.OpenAsync();
-                    using (var cmd = new MySqlCommand("INSERT INTO tempmonitor2.Statistics(UsersName, Nplatform, TempStart, DataStart, Enrollment) VALUES (?UsersName,?Nplatform,?TempStart,?DataStart,?Enrollment);", conn))
-                    {
-                        cmd.Parameters.Add("?UsersName", MySqlDbType.VarChar).Value = userName;
-                        cmd.Parameters.Add("?Nplatform", MySqlDbType.VarChar).Value = numPlatform;
-                        cmd.Parameters.Add("?TempStart", MySqlDbType.Int16).Value = startTemp;
-                        cmd.Parameters.Add("?DataStart", MySqlDbType.Date).Value = DateTime.Now.ToString("yyyy-MM-dd");
-                        cmd.Parameters.Add("?Enrollment", MySqlDbType.Byte).Value = "0";
-                        await cmd.ExecuteNonQueryAsync();
-                        _id = cmd.LastInsertedId;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.Device_CreateStatsAsync_DataBase_Error, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                }
-            }
-        }
-
-        /// <summary>
-        /// End write statistics
-        /// </summary>
         /// <param name="endTemp"></param>
+        /// <param name="dataStart"></param>
+        /// <param name="dataEnd"></param>
         /// <param name="upTime"></param>
-        private async void CompletedsStats(int endTemp, string upTime)
+        /// <param name="enrollment"></param>
+        private async void CompletedStats(string userName, string numPlatform, int startTemp, int endTemp, DateTime dataStart, DateTime dataEnd, string upTime, int enrollment)
         {
             using (var conn = new MySqlConnection(Parameters.ConnStr))
             {
                 try
                 {
                     await conn.OpenAsync();
-
-                    using (var cmd = new MySqlCommand("UPDATE tempmonitor2.Statistics SET TempEnd = @TempEnd, DataEnd =@DataEnd, UpTime = @UpTime, Enrollment =@Enrollment WHERE idStatistics = @idStatistics;", conn))
+                    using (var cmd = new MySqlCommand("INSERT INTO tempmonitor2.Statistics(UsersName, Nplatform, TempStart, TempEnd, DataStart, DataEnd, UpTime, Enrollment) VALUES (@UsersName, @Nplatform, @TempStart, @TempEnd, @DataStart, @DataEnd, @UpTime, @Enrollment);", conn))
                     {
-                        cmd.Parameters.AddWithValue("@TempEnd", endTemp);
-                        cmd.Parameters.AddWithValue("@DataEnd", DateTime.Now.ToString("yyyy-MM-dd"));
-                        cmd.Parameters.AddWithValue("@UpTime", upTime);
-                        cmd.Parameters.AddWithValue("@Enrollment", "1");
-                        cmd.Parameters.AddWithValue("@idStatistics", _id);
+                        cmd.Parameters.Add("@UsersName", MySqlDbType.VarChar).Value = userName;
+                        cmd.Parameters.Add("@Nplatform", MySqlDbType.VarChar).Value = numPlatform;
+                        cmd.Parameters.Add("@TempStart", MySqlDbType.Int16).Value = startTemp;
+                        cmd.Parameters.Add("@TempEnd", MySqlDbType.Int16).Value = endTemp;
+                        cmd.Parameters.Add("@DataStart", MySqlDbType.Date).Value = dataStart;
+                        cmd.Parameters.Add("@DataEnd", MySqlDbType.Date).Value = dataEnd;
+                        cmd.Parameters.Add("@UpTime", MySqlDbType.Date).Value = upTime;
+                        cmd.Parameters.Add("@Enrollment", MySqlDbType.Byte).Value = enrollment;
                         await cmd.ExecuteNonQueryAsync();
                     }
                 }
-                catch (Exception ex)
+                catch (MySqlException ex)
                 {
                     System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.Device_CreateStatsAsync_DataBase_Error, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                 }
@@ -375,9 +366,13 @@ namespace RaspberryConteiner.CardControl
         /// <param name="e"></param>
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            SetBackBlur();
+            if (_clickReset)
+            {
+                SetBackBlur();
 
-            ConfirmationReset.Visibility = System.Windows.Visibility.Visible;
+                ConfirmationReset.Visibility = System.Windows.Visibility.Visible;
+                _clickReset = false;
+            }
         }
 
         /// <summary>
@@ -447,28 +442,8 @@ namespace RaspberryConteiner.CardControl
 
             if (!_isCompleted)
             {
-                // Delete statistics from the database if it is not complete
-                using (var conn = new MySqlConnection(Parameters.ConnStr))
-                {
-                    try
-                    {
-                        conn.OpenAsync();
-                        using (var cmd =
-                            new MySqlCommand("DELETE FROM tempmonitor2.Statistics WHERE idStatistics = @idStatistics; ",
-                                conn))
-                        {
-                            cmd.Parameters.AddWithValue("@idStatistics", _id);
-                            cmd.ExecuteNonQueryAsync();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.MainWindow_Error_server,
-                            System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
-                    }
-                }
+                statistics.RemoveAt(0);
             }
-
             //
             _clickOne = true;
             //
