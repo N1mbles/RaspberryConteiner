@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
@@ -22,11 +23,10 @@ namespace RaspberryConteiner.CardControl
         }
 
         private DispatcherTimer _liveTime;
+        private Stopwatch _stopwatch;
 
         #region Variable
-        //UPTIME variable
-        private int _time;
-
+        //UP TIME variable
         private bool _isCompleted = false;
 
         // Only one click for start
@@ -67,39 +67,6 @@ namespace RaspberryConteiner.CardControl
         private bool _initTemperature = true;
         #endregion
 
-        void Timer_Tick(object sender, EventArgs e)
-        {
-            //UP TIME.Content = DateTime.Now.ToString("HH:mm:ss");
-            _time++;
-            if (_time <= 0) return;
-            LiveTimes.Content = $"00:0{_time / 60}:0{_time % 60}";
-            if (_time >= 10)
-            {
-                LiveTimes.Content = $"00:0{_time / 60}:{_time % 60}";
-            }
-            if (_time >= 600)
-            {
-                LiveTimes.Content = _time % 60 < 10 ? $"00:{_time / 60}:0{_time % 60}" : $"00:{_time / 60}:{_time % 60}";
-            }
-            if (_time >= 3600)
-            {
-                if (_time % 60 < 10)
-                {
-                    LiveTimes.Content = $"0{_time / 3600}:{(_time / 60) % 60}:0{_time % 60}";
-                }
-                if ((_time / 60) / 60 < 10)
-                {
-                    LiveTimes.Content = _time % 60 < 10 ? $"0{_time / 3600}:0{(_time / 60) % 60}:0{_time % 60}" : $"0{_time / 3600}:0{(_time / 60) % 60}:{_time % 60}";
-                }
-                else
-                    LiveTimes.Content = $"0{_time / 3600}:{(_time / 60) % 60}:{_time % 60}";
-            }
-            if (_time >= 36000)
-            {
-                LiveTimes.Content = $"{_time / 3600}:{(_time / 60) % 60}:{_time % 60}";
-            }
-        }
-
         /// <summary>
         /// Remove current device
         /// </summary>
@@ -120,7 +87,7 @@ namespace RaspberryConteiner.CardControl
                 KernelType = System.Windows.Media.Effects.KernelType.Gaussian,
                 Radius = 7
             };
-            this.BlurCard.Effect = blurEffect;
+            BlurCard.Effect = blurEffect;
         }
 
         /// <summary>
@@ -146,7 +113,7 @@ namespace RaspberryConteiner.CardControl
         }
         private void Rectangle_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-            SetTemp.Focus();
+            SetTemp.Focusable = true;
         }
         #region Input only numeric
         void OnPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -200,12 +167,11 @@ namespace RaspberryConteiner.CardControl
             }
             else
             {
-                // Set timer
-                _liveTime = new DispatcherTimer
-                {
-                    Interval = new TimeSpan(0, 0, 1)
-                };
-                _liveTime.Tick += Timer_Tick;
+                _stopwatch = new Stopwatch();
+                _liveTime = new DispatcherTimer(DispatcherPriority.Render) {Interval = new TimeSpan(0, 0, 1)};
+                _liveTime.Tick += Ticks;
+
+                _stopwatch.Start();
                 _liveTime.Start();
 
                 // loop running program
@@ -245,13 +211,14 @@ namespace RaspberryConteiner.CardControl
                                     //When temp it reached the specified
                                     if (int.Parse(rdr[4].ToString()) >= _iMaxTemp)
                                     {
-                                        if (_time > 1)
+                                        if (_stopwatch.ElapsedTicks > 1)
                                         {
                                             CompletedsStats(int.Parse(rdr[4].ToString()), LiveTimes.Content.ToString());
                                             _isCompleted = true;
                                         }
 
                                         _liveTime.Stop();
+                                        _stopwatch.Reset();
                                         NotificationEndProcess();
                                         _initTemperature = true;
                                         _isWorking = false; // stop getting temp from database
@@ -272,13 +239,18 @@ namespace RaspberryConteiner.CardControl
             }
         }
 
+        private void Ticks(object sender, EventArgs e)
+        {
+            LiveTimes.Content = _stopwatch.Elapsed.ToString(@"hh\:mm\:ss");
+        }
+
         /// <summary>
         /// Create statistics
         /// </summary>
         /// <param name="userName"></param>
         /// <param name="numPlatform"></param>
         /// <param name="startTemp"></param>
-        private async void CreateStatsAsync(string userName, string numPlatform, int startTemp)
+        private async void CreateStatsAsync(string userName, string numPlatform, int startTemp = 0)
         {
             using (var conn = new MySqlConnection(Parameters.ConnStr))
             {
@@ -349,8 +321,10 @@ namespace RaspberryConteiner.CardControl
         private void SetValueDb(int currentTemp, int maxTemp)
         {
             CurrentTemperature = currentTemp;
-
-            MaxTemp = maxTemp;
+            if (maxTemp != MaxTemp)
+            {
+                MaxTemp = maxTemp;
+            }
         }
         private void SetBackgroundTemp(double temperature)
         {
@@ -424,8 +398,8 @@ namespace RaspberryConteiner.CardControl
                         cmd.Parameters.AddWithValue("@NPlatform", Nplatform);
                         cmd.ExecuteNonQueryAsync();
 
-                         // Remove device from wrapPanel
-                         (this.Parent as WrapPanel)?.Children.Remove(this);
+                        // Remove device from wrapPanel
+                        (Parent as WrapPanel)?.Children.Remove(this);
                     }
                 }
                 catch (Exception ex)
@@ -444,7 +418,7 @@ namespace RaspberryConteiner.CardControl
             ConfirmationRemoved.Visibility = System.Windows.Visibility.Hidden;
 
             // Remove effect
-            this.BlurCard.Effect = null;
+            BlurCard.Effect = null;
         }
 
         private void btnOk_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -452,7 +426,7 @@ namespace RaspberryConteiner.CardControl
             ConfirmationEndProcess.Visibility = System.Windows.Visibility.Hidden;
 
             // Remove effect
-            this.BlurCard.Effect = null;
+            BlurCard.Effect = null;
         }
 
         private void btnCancelReset_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -460,7 +434,7 @@ namespace RaspberryConteiner.CardControl
             ConfirmationReset.Visibility = System.Windows.Visibility.Hidden;
 
             // Remove effect
-            this.BlurCard.Effect = null;
+            BlurCard.Effect = null;
         }
 
         private void btnReset_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -507,12 +481,12 @@ namespace RaspberryConteiner.CardControl
 
             //Stop timer
             _liveTime.Stop();
-            _time = 0;
+            _stopwatch.Reset();
 
             ConfirmationReset.Visibility = System.Windows.Visibility.Hidden; //Hide notification menu
 
             // Remove effect
-            this.BlurCard.Effect = null;
+            BlurCard.Effect = null;
         }
     }
 }
