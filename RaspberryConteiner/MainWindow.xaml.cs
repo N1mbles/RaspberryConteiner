@@ -19,7 +19,7 @@ namespace RaspberryConteiner
         private bool _isUsers;
 
         //Table with statistics
-        System.Data.DataTable _stats;
+        private System.Data.DataTable _stats;
 
         public MainWindow()
         {
@@ -34,17 +34,6 @@ namespace RaspberryConteiner
             MaxTemp.Text = Parameters.MaxTemperature.ToString();
             //Set default delay
             Delay.Text = Parameters.Delay.ToString();
-            // Init users
-            InitUsers();
-            // Init Devices
-            InitDevices();
-
-            ////Check Internet connection
-            //if(!InternetConnection.CheckForInternetConnection())
-            //{
-            //    NotConnection notConnection = new NotConnection();
-            //    notConnection.Show();
-            //}
         }
         /// <summary>
         /// Initialization Users from Db on load window
@@ -58,7 +47,7 @@ namespace RaspberryConteiner
             {
                 try
                 {
-                    conn.Open();
+                    conn.OpenAsync();
                     using (var cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Users;", conn))
                     {
                         var rdr = cmd.ExecuteReader();
@@ -83,7 +72,7 @@ namespace RaspberryConteiner
             {
                 try
                 {
-                    conn.Open();
+                    conn.OpenAsync();
 
                     using (var cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices;", conn))
                     {
@@ -103,9 +92,21 @@ namespace RaspberryConteiner
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private  void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //Check Internet connection
+            if (!InternetChecker.IsConnectedToInternet())
+            {
+                NotConnection.Visibility = Visibility.Visible;
 
+            }
+            else
+            {
+                // Init users
+                InitUsers();
+                // Init Devices
+                InitDevices();
+            }
         }
         /// <summary>
         /// Add new item
@@ -338,7 +339,7 @@ namespace RaspberryConteiner
             _isUsers = false;
             _isDevices = true;
             //
-            Settingss.Visibility = Visibility.Hidden;
+            GrdSettings.Visibility = Visibility.Hidden;
             //
             ListDevice.Visibility = Visibility.Visible;
             ListOfUsers.Visibility = Visibility.Hidden;
@@ -354,7 +355,7 @@ namespace RaspberryConteiner
             _isDevices = false;
             _isUsers = true;
             //Hide settings
-            Settingss.Visibility = Visibility.Hidden;
+            GrdSettings.Visibility = Visibility.Hidden;
             //Visible panel of users
             ListDevice.Visibility = Visibility.Hidden;
             ListOfUsers.Visibility = Visibility.Visible;
@@ -377,7 +378,7 @@ namespace RaspberryConteiner
             ListOfUsers.Visibility = Visibility.Hidden;
             ListDevice.Visibility = Visibility.Hidden;
 
-            Settingss.Visibility = Visibility.Hidden;
+            GrdSettings.Visibility = Visibility.Hidden;
 
             AddNewItem.Visibility = Visibility.Hidden;
             AddNewUser.Visibility = Visibility.Hidden;
@@ -389,7 +390,7 @@ namespace RaspberryConteiner
         {
             Add.Visibility = Visibility.Hidden;
 
-            Settingss.Visibility = Visibility.Visible;
+            GrdSettings.Visibility = Visibility.Visible;
 
             ListOfUsers.Visibility = Visibility.Hidden;
             ListDevice.Visibility = Visibility.Hidden;
@@ -554,12 +555,32 @@ namespace RaspberryConteiner
             _isDevices = false;
             _isUsers = true;
             //Hide settings
-            Settingss.Visibility = Visibility.Hidden;
+            GrdSettings.Visibility = Visibility.Hidden;
             //Visible panel of users
             ListDevice.Visibility = Visibility.Hidden;
             ListOfUsers.Visibility = Visibility.Visible;
             //
             Statistics.Visibility = Visibility.Hidden;
+        }
+
+        /// <summary>
+        /// Try again reconnect to network
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_12(object sender, RoutedEventArgs e)
+        {
+            if (!InternetChecker.IsConnectedToInternet()) return;
+
+            // Show wifi connected
+            Wifi.Visibility = Visibility.Visible;
+            Connected.Visibility = Visibility.Visible;
+            // Init users
+            InitUsers();
+            // Init Devices
+            InitDevices();
+
+            NotConnection.Visibility = Visibility.Hidden;
         }
     }
 }

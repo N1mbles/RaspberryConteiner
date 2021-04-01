@@ -176,10 +176,7 @@
     <Compile Include="Exit.xaml.cs">
       <DependentUpon>Exit.xaml</DependentUpon>
     </Compile>
-    <Compile Include="InternetConnection.cs" />
-    <Compile Include="NotConnection.xaml.cs">
-      <DependentUpon>NotConnection.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="InternetChecker.cs" />
     <Compile Include="Parameters.cs" />
     <Page Include="CardControl\Device.xaml">
       <SubType>Designer</SubType>
@@ -209,10 +206,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NotConnection.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -332,6 +325,9 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\wifi.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
