@@ -62,7 +62,7 @@
             </ScrollViewer>
         </Grid>
         <!--Add new device-->
-        <Grid x:Name="AddNewItem" Background="#FFDADADA" Margin="122,178,0,0" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Height="196" Width="256">
+        <Grid x:Name="AddNewDevice" Background="#FFDADADA" Margin="122,178,0,0" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Height="196" Width="256">
             <Label Content="Name" HorizontalAlignment="Left" Margin="9,46,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16"/>
             <TextBox x:Name="NameOfDevice" HorizontalAlignment="Left" Height="23" Margin="100,50,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
             <Button Content="Add" HorizontalAlignment="Left" Margin="28,159,0,0" VerticalAlignment="Top" Width="75" Background="#FF4ABEE2" Foreground="White" FontSize="16" BorderThickness="4,1,1,1" Click="Button_Click" FontFamily="./#9651" />

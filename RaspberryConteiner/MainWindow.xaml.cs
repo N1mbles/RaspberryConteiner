@@ -118,7 +118,7 @@ namespace RaspberryConteiner
             if (_isDevices)
             {
                 ListDevice.Visibility = Visibility.Hidden;
-                AddNewItem.Visibility = Visibility.Visible;
+                AddNewDevice.Visibility = Visibility.Visible;
             }
 
             if (!_isUsers) return;
@@ -177,7 +177,7 @@ namespace RaspberryConteiner
                                     System.Windows.Forms.MessageBox.Show(Properties.Resources.MainWindow_Button_Click_New_Device_Added_, Properties.Resources.MainWindow_Information, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
 
                                     //Hide from
-                                    AddNewItem.Visibility = Visibility.Hidden;
+                                    AddNewDevice.Visibility = Visibility.Hidden;
                                     ListDevice.Visibility = Visibility.Visible;
 
                                     // null string 
@@ -204,7 +204,7 @@ namespace RaspberryConteiner
         }
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            AddNewItem.Visibility = Visibility.Hidden;
+            AddNewDevice.Visibility = Visibility.Hidden;
             ListDevice.Visibility = Visibility.Visible;
         }
         /// <summary>
@@ -345,6 +345,9 @@ namespace RaspberryConteiner
             ListOfUsers.Visibility = Visibility.Hidden;
             //
             Statistics.Visibility = Visibility.Hidden;
+            // Hide Add new item
+            AddNewDevice.Visibility = Visibility.Hidden;
+            AddNewUser.Visibility = Visibility.Hidden;
         }
         // Users
         private void Button_Click_7(object sender, RoutedEventArgs e)
@@ -361,6 +364,9 @@ namespace RaspberryConteiner
             ListOfUsers.Visibility = Visibility.Visible;
             //
             Statistics.Visibility = Visibility.Hidden;
+            // Hide Add new item
+            AddNewDevice.Visibility = Visibility.Hidden;
+            AddNewUser.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -372,15 +378,15 @@ namespace RaspberryConteiner
         {
             //Show statistics
             Statistics.Visibility = Visibility.Visible;
-
+            // Hide button Add
             Add.Visibility = Visibility.Hidden;
-
+            //Hide  ListDevice && Devices
             ListOfUsers.Visibility = Visibility.Hidden;
             ListDevice.Visibility = Visibility.Hidden;
 
             GrdSettings.Visibility = Visibility.Hidden;
 
-            AddNewItem.Visibility = Visibility.Hidden;
+            AddNewDevice.Visibility = Visibility.Hidden;
             AddNewUser.Visibility = Visibility.Hidden;
 
             GetStats();
@@ -390,12 +396,13 @@ namespace RaspberryConteiner
         {
             Add.Visibility = Visibility.Hidden;
 
-            GrdSettings.Visibility = Visibility.Visible;
+            GrdSettings.Visibility = Visibility.Visible; // Show
 
             ListOfUsers.Visibility = Visibility.Hidden;
             ListDevice.Visibility = Visibility.Hidden;
 
-            AddNewItem.Visibility = Visibility.Hidden;
+            // Hide Add new item
+            AddNewDevice.Visibility = Visibility.Hidden;
             AddNewUser.Visibility = Visibility.Hidden;
 
             Statistics.Visibility = Visibility.Hidden;
