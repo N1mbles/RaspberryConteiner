@@ -201,7 +201,7 @@ namespace RaspberryConteiner.CardControl
                                     //Initialization only 1 times
                                     if (_initTemperature)
                                     {
-                                        statistics.Add(new Statistics { UserName = Parameters.CurrentUser, Nplatform = Nplatform, TempStart = Convert.ToInt16(rdr[4]), TempEnd = 0, DataStart = DateTime.Now, DataEnd = DateTime.Now, UpTime = new TimeSpan(00,00,00), Enrollment = 0 });
+                                        _statistics.Add(new Statistics { UserName = Parameters.CurrentUser, Nplatform = Nplatform, TempStart = Convert.ToInt16(rdr[4]), TempEnd = 0, DataStart = DateTime.Now, DataEnd = DateTime.Now, UpTime = new TimeSpan(00,00,00), Enrollment = 0 });
                                         InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp                                                        
                                         _initTemperature = false;
                                     }
@@ -223,10 +223,11 @@ namespace RaspberryConteiner.CardControl
                                         //
                                         if (_stopwatch.Elapsed.Seconds > 1)
                                         {
-                                            statistics[0].TempEnd = Convert.ToInt16(rdr[4]);
-                                            statistics[0].DataEnd = DateTime.Now;
-                                            statistics[0].UpTime = LiveTimes.Content.ToString();
-                                            statistics[0].Enrollment = 1;
+                                            var timeTaken = _stopwatch.Elapsed;
+                                            _statistics[0].TempEnd = Convert.ToInt16(rdr[4]);
+                                            _statistics[0].DataEnd = DateTime.Now;
+                                            _statistics[0].UpTime = timeTaken;
+                                            _statistics[0].Enrollment = 1;
 
                                             CompletedStats(_statistics[0].UserName, _statistics[0].Nplatform,
                                                 _statistics[0].TempStart, _statistics[0].TempEnd, _statistics[0].DataStart,
