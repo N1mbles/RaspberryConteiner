@@ -26,7 +26,7 @@ namespace RaspberryConteiner.CardControl
         private DispatcherTimer _liveTime;
         private Stopwatch _stopwatch;
 
-        private List<Statistics> statistics = new List<Statistics>();
+        private readonly List<Statistics> _statistics = new List<Statistics>();
 
         #region Variable
         //UP TIME variable
@@ -201,7 +201,7 @@ namespace RaspberryConteiner.CardControl
                                     //Initialization only 1 times
                                     if (_initTemperature)
                                     {
-                                        statistics.Add(new Statistics { UserName = Parameters.CurrentUser, Nplatform = Nplatform, TempStart = Convert.ToInt16(rdr[4]), TempEnd = 0, DataStart = DateTime.Now, DataEnd = DateTime.Now, UpTime = "00:00:00", Enrollment = 0 });
+                                        _statistics.Add(new Statistics { UserName = Parameters.CurrentUser, Nplatform = Nplatform, TempStart = Convert.ToInt16(rdr[4]), TempEnd = 0, DataStart = DateTime.Now, DataEnd = DateTime.Now, UpTime = new TimeSpan(00,00,00), Enrollment = 0 });
                                         InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp                                                        
                                         _initTemperature = false;
                                     }
@@ -223,14 +223,15 @@ namespace RaspberryConteiner.CardControl
                                         //
                                         if (_stopwatch.Elapsed.Seconds > 1)
                                         {
-                                            statistics[0].TempEnd = Convert.ToInt16(rdr[4]);
-                                            statistics[0].DataEnd = DateTime.Now;
-                                            statistics[0].UpTime = LiveTimes.Content.ToString();
-                                            statistics[0].Enrollment = 1;
+                                            var timeTaken = _stopwatch.Elapsed;
+                                            _statistics[0].TempEnd = Convert.ToInt16(rdr[4]);
+                                            _statistics[0].DataEnd = DateTime.Now;
+                                            _statistics[0].UpTime = timeTaken;
+                                            _statistics[0].Enrollment = 1;
 
-                                            CompletedStats(statistics[0].UserName, statistics[0].Nplatform,
-                                                statistics[0].TempStart, statistics[0].TempEnd, statistics[0].DataStart,
-                                                statistics[0].DataEnd, statistics[0].UpTime, statistics[0].Enrollment);
+                                            CompletedStats(_statistics[0].UserName, _statistics[0].Nplatform,
+                                                _statistics[0].TempStart, _statistics[0].TempEnd, _statistics[0].DataStart,
+                                                _statistics[0].DataEnd, _statistics[0].UpTime, _statistics[0].Enrollment);
                                             _isCompleted = true;
                                         }
                                         NotificationEndProcess();
@@ -269,7 +270,7 @@ namespace RaspberryConteiner.CardControl
         /// <param name="dataEnd"></param>
         /// <param name="upTime"></param>
         /// <param name="enrollment"></param>
-        private async void CompletedStats(string userName, string numPlatform, int startTemp, int endTemp, DateTime dataStart, DateTime dataEnd, string upTime, int enrollment)
+        private async void CompletedStats(string userName, string numPlatform, int startTemp, int endTemp, DateTime dataStart, DateTime dataEnd, TimeSpan upTime, int enrollment)
         {
             using (var conn = new MySqlConnection(Parameters.ConnStr))
             {
@@ -284,7 +285,7 @@ namespace RaspberryConteiner.CardControl
                         cmd.Parameters.Add("@TempEnd", MySqlDbType.Int16).Value = endTemp;
                         cmd.Parameters.Add("@DataStart", MySqlDbType.Date).Value = dataStart;
                         cmd.Parameters.Add("@DataEnd", MySqlDbType.Date).Value = dataEnd;
-                        cmd.Parameters.Add("@UpTime", MySqlDbType.Date).Value = upTime;
+                        cmd.Parameters.Add("@UpTime", MySqlDbType.Time).Value = upTime;
                         cmd.Parameters.Add("@Enrollment", MySqlDbType.Byte).Value = enrollment;
                         await cmd.ExecuteNonQueryAsync();
                     }
@@ -442,7 +443,7 @@ namespace RaspberryConteiner.CardControl
 
             if (!_isCompleted)
             {
-                statistics.RemoveAt(0);
+                _statistics.RemoveAt(0);
             }
             //
             _clickOne = true;
