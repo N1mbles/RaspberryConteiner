@@ -44,7 +44,7 @@
                     <Image Source="Image/gear.png" />
                 </Button>
 
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="CurrentUser"  Text=""  Height="40" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="20" MouseDown="_CurrentUser_MouseDown" />
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="CurrentUser"  Text=""  Foreground="White" FontFamily="./#9651" FontSize="46" MouseDown="_CurrentUser_MouseDown" />
 
             </DockPanel>
         </Grid>
