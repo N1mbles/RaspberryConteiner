@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        xmlns:local="clr-namespace:RaspberryConteiner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="804" Width="1260" Loaded="Window_Loaded" WindowStyle="None" KeyDown="Window_KeyDown" WindowState="Maximized" WindowStartupLocation="CenterOwner" Foreground="{x:Null}">
+        Title="MainWindow" Height="764.8" Width="1260" Loaded="Window_Loaded" WindowStyle="None" KeyDown="Window_KeyDown" WindowState="Maximized" WindowStartupLocation="CenterOwner" Foreground="{x:Null}">
 
     <!-- Button style -->
     <Window.Resources>
@@ -17,8 +17,13 @@
     </Window.Resources>
 
     <Grid Background="#FFCBC7C7" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="43*"/>
+            <RowDefinition Height="33*"/>
+            <RowDefinition Height="299*"/>
+        </Grid.RowDefinitions>
         <!-- Header-->
-        <Grid x:Name="Header" Margin="0,0,0,613.6" MinWidth="480" MinHeight="100" VerticalAlignment="Top" >
+        <Grid x:Name="Header" MinWidth="480" MinHeight="100" VerticalAlignment="Top" Height="100" >
             <Rectangle Stretch="UniformToFill"  HorizontalAlignment="Stretch"  Stroke="Black" VerticalAlignment="Top" Fill="Black" MinWidth="534" MinHeight="98" Height="100"/>
 
             <DockPanel>
@@ -44,25 +49,32 @@
                     <Image Source="Image/gear.png" />
                 </Button>
 
-                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="CurrentUser"  Text=""  Foreground="White" FontFamily="./#9651" FontSize="46" MouseDown="_CurrentUser_MouseDown" />
+                <!--<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="CurrentUser"  Text=""  Foreground="White" FontFamily="./#9651" FontSize="46" MouseDown="_CurrentUser_MouseDown" />-->
 
             </DockPanel>
         </Grid>
 
+        <!--Current user-->
+        <DockPanel Grid.Row="1">
+            <Image DockPanel.Dock="Left" x:Name="Add" Height="49" Visibility="Visible" Width="49" Source="Image/plus.png" MouseDown="Image_MouseDown_4" ToolTip="Add new Device" HorizontalAlignment="Left" Margin="25,0,0,0" />
+            <Border  HorizontalAlignment="Center" VerticalAlignment="Top" Background="Black" CornerRadius="5" Height="54" >
+                <Label x:Name="CurrentUser" Content="Angel" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="./#9651" FontSize="38" Foreground="White" MouseDown="CurrentUser_MouseDown"/>
+            </Border>
+        </DockPanel>
         <!--Show device on board-->
-        <Grid x:Name="ListDevice" Background="#FFDADADA" Margin="10,200,9.6,27.6" MinWidth="450" MinHeight="200"  Visibility="Hidden">
+        <Grid x:Name="ListDevice" Background="#FFDADADA" Margin="10,3,9.6,27.6" MinWidth="450" MinHeight="200"  Visibility="Hidden" Grid.Row="2">
             <ScrollViewer x:Name="Scroll"   VerticalScrollBarVisibility="Visible" CanContentScroll="True" Margin="0,10">
-                <WrapPanel x:Name="Cards"  Margin="10,0,0,0"  />
+                <WrapPanel x:Name="Cards" />
             </ScrollViewer>
         </Grid>
         <!--Show users on board-->
-        <Grid x:Name="ListOfUsers" Background="#FFDADADA" Margin="10,200,9.6,27.6" MinWidth="450" MinHeight="200"  Visibility="Hidden">
+        <Grid x:Name="ListOfUsers" Background="#FFDADADA" Margin="10,3,9.6,27.6" MinWidth="450" MinHeight="200"  Visibility="Hidden" Grid.Row="2">
             <ScrollViewer x:Name="Scrolls"   VerticalScrollBarVisibility="Visible" CanContentScroll="True" Margin="0,10">
-                <WrapPanel x:Name="CardsUsers"  Margin="10,0,0,0" />
+                <WrapPanel x:Name="CardsUsers" />
             </ScrollViewer>
         </Grid>
         <!--Add new device-->
-        <Grid x:Name="AddNewDevice" Background="#FFDADADA" Margin="122,178,0,0" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Height="196" Width="256">
+        <Grid x:Name="AddNewDevice" Background="#FFDADADA" Margin="122,79,0,0" Visibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Height="196" Width="256" Grid.Row="1" Grid.RowSpan="2">
             <Label Content="Name" HorizontalAlignment="Left" Margin="9,46,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16"/>
             <TextBox x:Name="NameOfDevice" HorizontalAlignment="Left" Height="23" Margin="100,50,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>
             <Button Content="Add" HorizontalAlignment="Left" Margin="28,159,0,0" VerticalAlignment="Top" Width="75" Background="#FF4ABEE2" Foreground="White" FontSize="16" BorderThickness="4,1,1,1" Click="Button_Click" FontFamily="./#9651" />
@@ -74,7 +86,7 @@
         </Grid>
 
         <!--Add new User-->
-        <Grid x:Name="AddNewUser" Background="#FFDADADA" Margin="122,178,0,0" Visibility ="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Height="282">
+        <Grid x:Name="AddNewUser" Background="#FFDADADA" Margin="122,79,0,0" Visibility ="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Height="282" Grid.Row="1" Width="247" Grid.RowSpan="2">
             <Label Content="Name" HorizontalAlignment="Left" Margin="11,185,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16"/>
             <TextBox x:Name="NameOfUser" HorizontalAlignment="Left" Height="23" Margin="84,188,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="135" BorderBrush="Black"/>
             <!--<TextBox x:Name="Ip" HorizontalAlignment="Left" Height="23" Margin="85,102,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="143"/>-->
@@ -94,7 +106,7 @@
         </Grid>
 
         <!--Statistic-->
-        <Grid x:Name="Statistics" Margin="10,150,10,27.6" Background="#FFDADADA" Visibility="Hidden" >
+        <Grid x:Name="Statistics"  Margin="10,0,10,22" Background="#FFDADADA" Visibility="Hidden" Grid.Row="2" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="50*"/>
                 <RowDefinition Height="509*"/>
@@ -151,7 +163,7 @@
         </Grid>
 
         <!-- Settings -->
-        <Grid x:Name="GrdSettings" Background="#FFDADADA" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="250" Margin="100,150"  Visibility="Hidden">
+        <Grid x:Name="GrdSettings" Background="#FFDADADA" HorizontalAlignment="Left" VerticalAlignment="Top" Width="300" Height="250" Margin="100,51,0,0"  Visibility="Hidden" Grid.Row="1" Grid.RowSpan="2">
             <Label Content="Default Settings" HorizontalAlignment="Center" Margin="15" FontFamily="./#9651" FontSize="20"/>
             <Label Content="Delay" HorizontalAlignment="Left" Margin="43,94,0,0" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16" ToolTip="Set the maximum default temperature on the device"/>
             <TextBox x:Name="Delay" HorizontalAlignment="Left" Height="23" Margin="183,100,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="2" />
@@ -160,10 +172,9 @@
             <TextBox x:Name="MaxTemp" HorizontalAlignment="Left" Height="23" Margin="183,145,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="3" />
         </Grid>
 
-        <Image x:Name="Add" Height="49" Margin="22,132,0,0" Visibility="Hidden" Width="49" Source="Image/plus.png" MouseDown="Image_MouseDown_4" ToolTip="Add new Device" MaxWidth="50" MaxHeight="50" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 
 
-        <Grid x:Name="NotConnection" Visibility="Hidden" Background="#FFEEB02C" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="400">
+        <Grid x:Name="NotConnection" Visibility="Hidden" Background="#FFEEB02C" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="400" Margin="227,2,226.6,195.6" Grid.Row="2">
 
             <Label x:Name="Title" Content="No Internet connection. Please check your network" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="./#9651" FontSize="32" Margin="0,40,0,0" Padding="10"/>
 

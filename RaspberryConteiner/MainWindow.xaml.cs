@@ -41,7 +41,7 @@ namespace RaspberryConteiner
         private void InitUsers()
         {
             // Show current user in system
-            CurrentUser.Text = Parameters.CurrentUser;
+            CurrentUser.Content = Parameters.CurrentUser;
 
             using (var conn = new MySqlConnection(Parameters.ConnStr))
             {
@@ -92,7 +92,7 @@ namespace RaspberryConteiner
             }
         }
 
-        private  void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //Check Internet connection
             if (!InternetChecker.IsConnectedToInternet())
@@ -554,21 +554,6 @@ namespace RaspberryConteiner
             GetStats(result);
 
         }
-        private void _CurrentUser_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            // Show icon Add
-            Add.Visibility = Visibility.Visible;
-            //
-            _isDevices = false;
-            _isUsers = true;
-            //Hide settings
-            GrdSettings.Visibility = Visibility.Hidden;
-            //Visible panel of users
-            ListDevice.Visibility = Visibility.Hidden;
-            ListOfUsers.Visibility = Visibility.Visible;
-            //
-            Statistics.Visibility = Visibility.Hidden;
-        }
 
         /// <summary>
         /// Try again reconnect to network
@@ -588,6 +573,22 @@ namespace RaspberryConteiner
             InitDevices();
 
             NotConnection.Visibility = Visibility.Hidden;
+        }
+
+        private void CurrentUser_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // Show icon Add
+            Add.Visibility = Visibility.Visible;
+            //
+            _isDevices = false;
+            _isUsers = true;
+            //Hide settings
+            GrdSettings.Visibility = Visibility.Hidden;
+            //Visible panel of users
+            ListDevice.Visibility = Visibility.Hidden;
+            ListOfUsers.Visibility = Visibility.Visible;
+            //
+            Statistics.Visibility = Visibility.Hidden;
         }
     }
 }
