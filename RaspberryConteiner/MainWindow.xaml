@@ -18,7 +18,7 @@
 
     <Grid Background="#FFCBC7C7" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="43*"/>
+            <RowDefinition Height="45*"/>
             <RowDefinition Height="33*"/>
             <RowDefinition Height="299*"/>
         </Grid.RowDefinitions>

@@ -118,7 +118,7 @@ namespace RaspberryConteiner.CardControl
         }
         private void Rectangle_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-            SetTemp.Focusable = true;
+            SetTemp.Focus();
         }
         #region Input only numeric
         void OnPreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -158,7 +158,6 @@ namespace RaspberryConteiner.CardControl
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                     }
                 }
-                SetTemp.Focusable = false;
             }
         }
         /// <summary>
