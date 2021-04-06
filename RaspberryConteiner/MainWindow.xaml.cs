@@ -35,9 +35,6 @@ namespace RaspberryConteiner
             //Set default delay
             Delay.Text = Parameters.Delay.ToString();
         }
-        /// <summary>
-        /// Initialization Users from Db on load window
-        /// </summary>
         private void InitUsers()
         {
             // Show current user in system
@@ -98,7 +95,6 @@ namespace RaspberryConteiner
             if (!InternetChecker.IsConnectedToInternet())
             {
                 NotConnection.Visibility = Visibility.Visible;
-
             }
             else
             {
@@ -124,7 +120,6 @@ namespace RaspberryConteiner
             if (!_isUsers) return;
             ListOfUsers.Visibility = Visibility.Hidden;
             AddNewUser.Visibility = Visibility.Visible;
-
         }
         /// <summary>
         /// Exit from dashboard Key "Esc"

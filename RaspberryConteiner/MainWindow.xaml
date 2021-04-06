@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        xmlns:local="clr-namespace:RaspberryConteiner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="764.8" Width="1260" Loaded="Window_Loaded" WindowStyle="None" KeyDown="Window_KeyDown" WindowState="Maximized" WindowStartupLocation="CenterOwner" Foreground="{x:Null}">
+        Title="MainWindow" Height="793.6" Width="1466.4" Loaded="Window_Loaded" WindowStyle="None" KeyDown="Window_KeyDown" WindowState="Maximized" WindowStartupLocation="CenterOwner" Foreground="{x:Null}">
 
     <!-- Button style -->
     <Window.Resources>
@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
         <!-- Header-->
         <Grid x:Name="Header" MinWidth="480" MinHeight="100" VerticalAlignment="Top" Height="100" >
-            <Rectangle Stretch="UniformToFill"  HorizontalAlignment="Stretch"  Stroke="Black" VerticalAlignment="Top" Fill="Black" MinWidth="534" MinHeight="98" Height="100"/>
+            <Rectangle  Stroke="Black" VerticalAlignment="Top" Fill="Black" MinWidth="534" MinHeight="98" Height="100"/>
 
             <DockPanel>
                 <!-- Devices -->
@@ -48,9 +48,6 @@
                 <Button DockPanel.Dock="Right" Style="{StaticResource MenuButtonStyle}" Width="73" HorizontalAlignment="Right"  Margin="18,0,15,0" Click="Button_Click_9"  >
                     <Image Source="Image/gear.png" />
                 </Button>
-
-                <!--<TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"  x:Name="CurrentUser"  Text=""  Foreground="White" FontFamily="./#9651" FontSize="46" MouseDown="_CurrentUser_MouseDown" />-->
-
             </DockPanel>
         </Grid>
 
@@ -172,11 +169,9 @@
             <TextBox x:Name="MaxTemp" HorizontalAlignment="Left" Height="23" Margin="183,145,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="59" PreviewTextInput="OnPreviewTextInput" MaxLength="3" />
         </Grid>
 
-
-
         <Grid x:Name="NotConnection" Visibility="Hidden" Background="#FFEEB02C" HorizontalAlignment="Center" VerticalAlignment="Center" Width="800" Height="400" Margin="227,2,226.6,195.6" Grid.Row="2">
 
-            <Label x:Name="Title" Content="No Internet connection. Please check your network" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="./#9651" FontSize="32" Margin="0,40,0,0" Padding="10"/>
+            <Label  Content="No Internet connection. Please check your network" HorizontalAlignment="Center"  VerticalAlignment="Top" FontFamily="./#9651" FontSize="32" Margin="0,40,0,0" Padding="10"/>
 
             <local:Loading x:Name="Loading" Visibility="Visible" EllipseSize="12"  HorizontalAlignment="Center"  VerticalAlignment="Center" Width="172" Height="146" />
 
