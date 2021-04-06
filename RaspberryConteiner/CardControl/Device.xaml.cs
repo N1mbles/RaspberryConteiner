@@ -417,7 +417,7 @@ namespace RaspberryConteiner.CardControl
             BlurCard.Effect = null;
         }
 
-        private void btnOk_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BtnOk_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ConfirmationEndProcess.Visibility = System.Windows.Visibility.Hidden;
 
@@ -425,7 +425,7 @@ namespace RaspberryConteiner.CardControl
             BlurCard.Effect = null;
         }
 
-        private void btnCancelReset_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BtnCancelReset_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             ConfirmationReset.Visibility = System.Windows.Visibility.Hidden;
 
@@ -433,7 +433,7 @@ namespace RaspberryConteiner.CardControl
             BlurCard.Effect = null;
         }
 
-        private void btnReset_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BtnReset_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             LocalTemp.Content = string.Empty;
 
