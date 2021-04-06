@@ -11,8 +11,8 @@ namespace RaspberryConteiner.CardControl
 
         public string NameofUser
         {
-            get => NameUser.Content.ToString();
-            set => NameUser.Content = value;
+            get => UserName.Content.ToString();
+            set => UserName.Content = value;
         }
 
         private void TestControl_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)

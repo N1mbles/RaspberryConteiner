@@ -38,8 +38,8 @@
         #endregion
 
         #region UsersSettings
-        public static int UserWidth = 300;
-        public static int UserHeight = 300;
+        public static int UserWidth = 250;
+        public static int UserHeight = 250;
         #endregion
 
         public static readonly string ConnStr = "server=databasetemp.clbmsuilb1nx.eu-west-3.rds.amazonaws.com;Port=3306;user=admin;database=tempmonitor2;password=3NqKPVNUCeGQ8gRJ;";
