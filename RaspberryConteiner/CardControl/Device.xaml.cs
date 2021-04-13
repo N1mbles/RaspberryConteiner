@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -81,7 +82,7 @@ namespace RaspberryConteiner.CardControl
         {
             SetBackBlur();
             //Show modal window
-            ConfirmationRemoved.Visibility = System.Windows.Visibility.Visible;
+            ConfirmationRemoved.Visibility = Visibility.Visible;
         }
 
         private void SetBackBlur()
@@ -197,6 +198,22 @@ namespace RaspberryConteiner.CardControl
 
                                 while (await rdr.ReadAsync())
                                 {
+                                    if (Convert.ToInt16(rdr[4].ToString()) == 0)
+                                    {
+                                        SetBackBlur();
+                                        ErrorCon.Visibility = Visibility.Visible;
+
+                                        // Play a sound as a notification.
+                                        SystemSounds.Beep.Play();
+
+                                        _liveTime.Stop();
+                                        _stopwatch.Stop();
+
+                                        _initTemperature = true;
+                                        _isWorking = false; // stop getting temp from database
+
+                                        break;
+                                    }
                                     //Initialization only 1 times
                                     if (_initTemperature)
                                     {
@@ -228,6 +245,9 @@ namespace RaspberryConteiner.CardControl
                                             _statistics[0].UpTime = timeTaken;
                                             _statistics[0].Enrollment = 1;
 
+                                            // Enable reset button
+                                            BtnRefresh.Visibility = Visibility.Visible;
+
                                             CompletedStats(_statistics[0].UserName, _statistics[0].Nplatform,
                                                 _statistics[0].TempStart, _statistics[0].TempEnd, _statistics[0].DataStart,
                                                 _statistics[0].DataEnd, _statistics[0].UpTime, _statistics[0].Enrollment);
@@ -236,6 +256,7 @@ namespace RaspberryConteiner.CardControl
                                         NotificationEndProcess();
                                         _initTemperature = true;
                                         _isWorking = false; // stop getting temp from database
+                                        break;
                                     }
                                 }
                             }
@@ -306,7 +327,7 @@ namespace RaspberryConteiner.CardControl
 
             SetBackBlur();
             //Show modal window
-            ConfirmationEndProcess.Visibility = System.Windows.Visibility.Visible;
+            ConfirmationEndProcess.Visibility = Visibility.Visible;
         }
 
         private void SetValueDb(int currentTemp, int maxTemp)
@@ -364,13 +385,13 @@ namespace RaspberryConteiner.CardControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (_clickReset)
             {
                 SetBackBlur();
 
-                ConfirmationReset.Visibility = System.Windows.Visibility.Visible;
+                ConfirmationReset.Visibility = Visibility.Visible;
                 _clickReset = false;
             }
         }
@@ -380,7 +401,7 @@ namespace RaspberryConteiner.CardControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click_1(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             using (var conn = new MySqlConnection(Parameters.ConnStr))
             {
@@ -408,31 +429,35 @@ namespace RaspberryConteiner.CardControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click_2(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            ConfirmationRemoved.Visibility = System.Windows.Visibility.Hidden;
+            ConfirmationRemoved.Visibility = Visibility.Hidden;
 
             // Remove effect
             BlurCard.Effect = null;
         }
 
-        private void BtnOk_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            ConfirmationEndProcess.Visibility = System.Windows.Visibility.Hidden;
+            ConfirmationEndProcess.Visibility = Visibility.Hidden;
 
             // Remove effect
             BlurCard.Effect = null;
         }
 
-        private void BtnCancelReset_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BtnCancelReset_Click(object sender, RoutedEventArgs e)
         {
-            ConfirmationReset.Visibility = System.Windows.Visibility.Hidden;
+            ConfirmationReset.Visibility = Visibility.Hidden;
 
             // Remove effect
             BlurCard.Effect = null;
         }
 
-        private void BtnReset_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
+        {
+            ResetValueFormDevice();
+        }
+        private void ResetValueFormDevice()
         {
             LocalTemp.Content = string.Empty;
 
@@ -449,6 +474,12 @@ namespace RaspberryConteiner.CardControl
             //
             _isWorking = false;
 
+            //Set Status device
+            SetStatusDevice(false);
+
+            //Reset background
+            CurrentTemp.Fill = Brushes.LimeGreen;
+
             //
             LiveTimes.Content = string.Empty;
             //
@@ -458,7 +489,21 @@ namespace RaspberryConteiner.CardControl
             _liveTime.Stop();
             _stopwatch.Reset();
 
-            ConfirmationReset.Visibility = System.Windows.Visibility.Hidden; //Hide notification menu
+            // Disable reset button
+            BtnRefresh.Visibility = Visibility.Hidden;
+
+            ConfirmationReset.Visibility = Visibility.Hidden; //Hide notification menu
+
+            // Remove effect
+            BlurCard.Effect = null;
+        }
+
+        private void BtnOkk_Click(object sender, RoutedEventArgs e)
+        {
+            ErrorCon.Visibility = Visibility.Hidden;
+
+            //
+            _clickOne = true;
 
             // Remove effect
             BlurCard.Effect = null;

@@ -160,10 +160,11 @@ namespace RaspberryConteiner
                         {
                             try
                             {
-                                using (var cmd = new MySqlCommand("INSERT INTO tempmonitor2.Devices (Name, NPlatform, MaxTemp) VALUES (@NameDevice,@NumberPlatform,@MaxTemp); ", conn))
+                                using (var cmd = new MySqlCommand("INSERT INTO tempmonitor2.Devices (Name, NPlatform, MaxTemp, CurrentTemp) VALUES (@NameDevice,@NumberPlatform,@MaxTemp, @CurrentTemp);", conn))
                                 {
                                     cmd.Parameters.AddWithValue("@NameDevice", NameDevice);
                                     cmd.Parameters.AddWithValue("@NumberPlatform", NumberPlatform.Text);
+                                    cmd.Parameters.AddWithValue("@@CurrentTemp", 0);
                                     cmd.Parameters.AddWithValue("@MaxTemp", Parameters.MaxTemperature);
                                     cmd.ExecuteNonQueryAsync();
 

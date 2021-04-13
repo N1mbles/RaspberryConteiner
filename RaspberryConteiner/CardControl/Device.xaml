@@ -50,7 +50,6 @@
                 <Label Content="°C" HorizontalAlignment="Left" Margin="89,75,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651"  MouseDown="Label_MouseDown" Height="22" Width="23"/>
                 <Label x:Name="InitTemp" Content="" HorizontalAlignment="Left" Margin="42,86,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651" FontSize="18" Height="29" Width="33"/>
 
-
                 <!-- Block(right side) The maximum temp is set -->
                 <Rectangle Fill="Black" HorizontalAlignment="Left" Height="47" Margin="283,77,0,0" VerticalAlignment="Top" Width="109" RadiusX="13" RadiusY="13" MouseDown="Rectangle_MouseDown_1" />
                 <Label Content="°C" HorizontalAlignment="Left" Margin="366,75,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651" />
@@ -67,7 +66,7 @@
                         <Label x:Name="LiveTimes" Content=""  Margin="0,3,0,3.6" FontFamily="./#9651" Foreground="#FFEBEBEB" FontSize="14" />
 
                         <!-- Refresh-->
-                        <Button x:Name="BtnRefresh"  DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource UcButtonStyle}" Margin="0,4,3,4.3"  Width="22" Height="Auto" Click="Button_Click" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}"  >
+                        <Button x:Name="BtnRefresh" Visibility="Hidden" DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource UcButtonStyle}" Margin="0,4,3,4.3"  Width="22" Height="Auto" Click="Button_Click" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}"  >
                             <Image Source="UserControlImage/refresh.png"  Height="21" Width="21" />
                         </Button>
 
@@ -108,12 +107,9 @@
         <Grid x:Name="ErrorCon" Visibility="Hidden" Margin="38,22,40,28">
             <Border x:Name="Bord" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="3" />
 
-            <TextBlock x:Name="Titlee" Text="Error connecting to server " HorizontalAlignment="Center"  Margin="0,0,0,50"  Padding="7" FontFamily="./#9651" FontSize="22"  Foreground="Black" TextWrapping="Wrap" />
+            <TextBlock x:Name="Titlee" Text="Error connection, check your device." HorizontalAlignment="Center"  Padding="7" FontFamily="./#9651" FontSize="22"  Foreground="Black" TextWrapping="Wrap" />
 
-            <!--<Label x:Name="Description2" Content="This device will be deleted." HorizontalAlignment="Center"  FontFamily="./#9651" FontSize="17" Margin="55,37,57,66"/>-->
-
-            <Button x:Name="BtnTryRecon" Content="Reconnect"  HorizontalAlignment="Right" Height="25"  BorderBrush="Black" Background="{x:Null}" BorderThickness="5,1,1,1" FontFamily="Segoe UI Semibold" FontSize="16" Margin="0,92,30,13"  Padding="3,1"/>
-            <Button x:Name="BtnOkk" Content="Ok"  HorizontalAlignment="Left" Height="25"   BorderBrush="Black" Background="#FF25BED4" BorderThickness="1"  Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Margin="30,92,0,13" Width="60" />
+            <Button x:Name="BtnOkk" Content="Ok"  HorizontalAlignment="Center" Height="25"   BorderBrush="Black" Background="#FF25BED4" BorderThickness="1"  Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Margin="0,92,0,13" Width="60" Click="BtnOkk_Click" />
         </Grid>
 
     </Grid>
