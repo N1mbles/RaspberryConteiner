@@ -18,15 +18,14 @@
 
     <Grid Background="#FFCBC7C7" >
         <Grid.RowDefinitions>
-            <RowDefinition Height="45*"/>
+            <RowDefinition Height="50*"/>
             <RowDefinition Height="33*"/>
             <RowDefinition Height="299*"/>
         </Grid.RowDefinitions>
         <!-- Header-->
         <Grid x:Name="Header" MinWidth="480" MinHeight="100" VerticalAlignment="Top" Height="100" >
-            <Rectangle  Stroke="Black" VerticalAlignment="Top" Fill="Black" MinWidth="534" MinHeight="98" Height="100"/>
 
-            <DockPanel>
+            <DockPanel Background="Black">
                 <!-- Devices -->
                 <Button DockPanel.Dock="Left" Style="{StaticResource MenuButtonStyle}" Width="73" Margin="18,0" Click="Button_Click_6">
                     <Image Source="Image/dashboard.png" />
@@ -39,7 +38,6 @@
                 <Button DockPanel.Dock="Left" Style="{StaticResource MenuButtonStyle}" Width="73"  Margin="10,0" Click="Button_Click_8"  >
                     <Image Source="Image/statistics.png" />
                 </Button>
-
                 <!-- Shutdown-->
                 <Button DockPanel.Dock="Right" Style="{StaticResource MenuButtonStyle}" Width="73" HorizontalAlignment="Right"  Margin="0,0,18,0" Click="Button_Click_10"  >
                     <Image Source="Image/shutdown.png" />
@@ -48,15 +46,16 @@
                 <Button DockPanel.Dock="Right" Style="{StaticResource MenuButtonStyle}" Width="73" HorizontalAlignment="Right"  Margin="18,0,15,0" Click="Button_Click_9"  >
                     <Image Source="Image/gear.png" />
                 </Button>
+                <!-- Show current user-->
+                <Border  HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" CornerRadius="5" Height="54" >
+                    <Label x:Name="CurrentUser" Content="Angel" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="./#9651" FontSize="38" Foreground="Black" MouseDown="CurrentUser_MouseDown"/>
+                </Border>
             </DockPanel>
         </Grid>
 
         <!--Current user-->
         <DockPanel Grid.Row="1">
             <Image DockPanel.Dock="Left" x:Name="Add" Height="49" Visibility="Visible" Width="49" Source="Image/plus.png" MouseDown="Image_MouseDown_4" ToolTip="Add new Device" HorizontalAlignment="Left" Margin="25,0,0,0" />
-            <Border  HorizontalAlignment="Center" VerticalAlignment="Top" Background="Black" CornerRadius="5" Height="54" >
-                <Label x:Name="CurrentUser" Content="Angel" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="./#9651" FontSize="38" Foreground="White" MouseDown="CurrentUser_MouseDown"/>
-            </Border>
         </DockPanel>
         <!--Show device on board-->
         <Grid x:Name="ListDevice" Background="#FFDADADA" Margin="10,3,9.6,27.6" MinWidth="450" MinHeight="200"  Visibility="Hidden" Grid.Row="2">
