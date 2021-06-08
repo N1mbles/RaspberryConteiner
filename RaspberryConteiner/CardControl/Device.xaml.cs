@@ -25,7 +25,8 @@ namespace RaspberryConteiner.CardControl
         }
 
         private DispatcherTimer _liveTime;
-        private Stopwatch _stopwatch;
+        private Stopwatch _stopwatch, _stopwatchRecover;
+
 
         private readonly List<Statistics> _statistics = new List<Statistics>();
 
@@ -67,6 +68,11 @@ namespace RaspberryConteiner.CardControl
             set => NumberDevice.Content = value;
         }
 
+        public string StatusDevice
+        {
+            set => SetStatusDevice(value);
+        }
+
         // Status connecting
         //private bool statusConnect = true;
         //
@@ -84,7 +90,6 @@ namespace RaspberryConteiner.CardControl
             //Show modal window
             ConfirmationRemoved.Visibility = Visibility.Visible;
         }
-
         private void SetBackBlur()
         {
             // Add background blur effect
@@ -159,11 +164,10 @@ namespace RaspberryConteiner.CardControl
                             System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                     }
                 }
+                HintMax.Visibility = Visibility.Hidden;
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
+
         private async void StartGettingTemp()
         {
             if (SetTemp.Text.Length == 0)
@@ -176,9 +180,20 @@ namespace RaspberryConteiner.CardControl
                 _liveTime = new DispatcherTimer(DispatcherPriority.Render) { Interval = new TimeSpan(0, 0, 1) };
                 _liveTime.Tick += Ticks;
 
-                _stopwatch.Start();
-                _liveTime.Start();
+                if (_stopwatchRecover != null)
+                {
+                    _stopwatch = _stopwatchRecover;
+                    _stopwatchRecover = null;
 
+                    _stopwatch.Start();
+                    _liveTime.Start();
+                }
+                else
+                {
+                    _stopwatch.Start();
+                    _liveTime.Start();
+                }
+                
                 // loop running program
                 while (_isWorking)
                 {
@@ -198,10 +213,15 @@ namespace RaspberryConteiner.CardControl
 
                                 while (await rdr.ReadAsync())
                                 {
-                                    if (Convert.ToInt16(rdr[4].ToString()) == 0)
+                                    // if device is off or he doesnt have connection to internet || value"CurrentTemperature = 0" 
+                                    if (Convert.ToInt16(rdr[4].ToString()) == 0 || Convert.ToInt16(rdr[6].ToString()) == 0)
                                     {
+                                        SetStatusDevice("NOTCONNECTED");
+
+                                        //show DialogWindow
                                         SetBackBlur();
                                         ErrorCon.Visibility = Visibility.Visible;
+                                        Titlee.Text = "Error connection, check your device. №" +  rdr[2];
 
                                         // Play a sound as a notification.
                                         SystemSounds.Beep.Play();
@@ -211,13 +231,12 @@ namespace RaspberryConteiner.CardControl
 
                                         _initTemperature = true;
                                         _isWorking = false; // stop getting temp from database
-
                                         break;
                                     }
                                     //Initialization only 1 times
                                     if (_initTemperature)
                                     {
-                                        _statistics.Add(new Statistics { UserName = Parameters.CurrentUser, Nplatform = Nplatform, TempStart = Convert.ToInt16(rdr[4]), TempEnd = 0, DataStart = DateTime.Now, DataEnd = DateTime.Now, UpTime = new TimeSpan(00,00,00), Enrollment = 0 });
+                                        _statistics.Add(new Statistics { UserName = Parameters.CurrentUser, Nplatform = Nplatform, TempStart = Convert.ToInt16(rdr[4]), TempEnd = 0, DataStart = DateTime.Now, DataEnd = DateTime.Now, UpTime = new TimeSpan(00, 00, 00), Enrollment = 0 });
                                         InitTemp.Content = int.Parse(rdr[4].ToString());//Show on initialization temp                                                        
                                         _initTemperature = false;
                                     }
@@ -229,7 +248,7 @@ namespace RaspberryConteiner.CardControl
                                     SetBackgroundTemp(int.Parse(rdr[4].ToString()));
 
                                     //
-                                    SetStatusDevice(true);
+                                    SetStatusDevice("CONNECTED");
 
                                     //When temp it reached the specified
                                     if (int.Parse(rdr[4].ToString()) >= _iMaxTemp)
@@ -263,9 +282,6 @@ namespace RaspberryConteiner.CardControl
                         }
                         catch (MySqlException ex)
                         {
-                            //
-                            SetStatusDevice(false);
-
                             System.Windows.Forms.MessageBox.Show(ex.Message, Properties.Resources.Device_StartGettingTemp_Error_database, System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information);
                         }
                         await Task.Delay(1000 * Parameters.Delay);
@@ -343,11 +359,11 @@ namespace RaspberryConteiner.CardControl
             // We calculate percent
             var result = (temperature / Convert.ToDouble(_iMaxTemp)) * 100;
 
-            if (result >= Parameters.Green && result < Parameters.Yellow)
+            if (result >= Parameters.Green && result < Parameters.Orange)
             {
                 CurrentTemp.Fill = Brushes.LimeGreen;
             }
-            if (result >= Parameters.Yellow && result < Parameters.RedStart)
+            if (result >= Parameters.Orange && result < Parameters.RedStart)
             {
                 CurrentTemp.Fill = Brushes.Orange;
             }
@@ -356,27 +372,38 @@ namespace RaspberryConteiner.CardControl
                 CurrentTemp.Fill = Brushes.Red;
             }
         }
-        private void SetStatusDevice(bool status)
+        private void SetStatusDevice(string status)
         {
-            if (status)
+            BitmapImage bitmap;
+            switch (status)
             {
-                Status.Content = "CONNECTED";
-                //Change photo on green circle
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.UriSource = new Uri("UserControlImage/cicleGreen.png", UriKind.Relative);
-                bitmap.EndInit();
-                StatusImage.Source = bitmap;
-            }
-            else
-            {
-                Status.Content = "NOT CONNECTED";
-                //Change photo on red circle
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.UriSource = new Uri("UserControlImage/cicleRed.png", UriKind.Relative);
-                bitmap.EndInit();
-                StatusImage.Source = bitmap;
+                case "CONNECTED":
+                    Status.Content = "CONNECTED";
+                    //Change photo on green circle
+                    bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri("UserControlImage/cicleGreen.png", UriKind.Relative);
+                    bitmap.EndInit();
+                    StatusImage.Source = bitmap;
+                    break;
+                case "NOTCONNECTED":
+                    Status.Content = "NOT CONNECTED";
+                    //Change photo on red circle
+                    bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri("UserControlImage/cicleRed.png", UriKind.Relative);
+                    bitmap.EndInit();
+                    StatusImage.Source = bitmap;
+                    break;
+                    //case "CLOSED":
+                    //    Status.Content = "NOT CONNECTED";
+                    //    //Change photo on green circle
+                    //    bitmap = new BitmapImage();
+                    //    bitmap.BeginInit();
+                    //    bitmap.UriSource = new Uri("UserControlImage/triangle.png", UriKind.Relative);
+                    //    bitmap.EndInit();
+                    //    StatusImage.Source = bitmap;
+                    //    break;
             }
         }
 
@@ -459,11 +486,12 @@ namespace RaspberryConteiner.CardControl
         }
         private void ResetValueFormDevice()
         {
+            // Show Hint
+            HintMax.Visibility = Visibility.Visible;
+
             LocalTemp.Content = string.Empty;
 
             InitTemp.Content = string.Empty;
-
-            SetTemp.Text = Parameters.MaxTemperature.ToString();
 
             if (!_isCompleted)
             {
@@ -473,9 +501,6 @@ namespace RaspberryConteiner.CardControl
             _clickOne = true;
             //
             _isWorking = false;
-
-            //Set Status device
-            SetStatusDevice(false);
 
             //Reset background
             CurrentTemp.Fill = Brushes.LimeGreen;
@@ -507,6 +532,10 @@ namespace RaspberryConteiner.CardControl
 
             // Remove effect
             BlurCard.Effect = null;
+
+            _isWorking = true;
+            _stopwatchRecover = _stopwatch;
+            StartGettingTemp();
         }
     }
 }

@@ -70,14 +70,15 @@ namespace RaspberryConteiner
                 try
                 {
                     conn.OpenAsync();
-
                     using (var cmd = new MySqlCommand("SELECT * FROM tempmonitor2.Devices;", conn))
                     {
                         var rdr = cmd.ExecuteReader();
 
                         while (rdr.Read())
                         {
-                            AddOneDevice(rdr[1].ToString(), rdr[2].ToString(), int.Parse(rdr[5].ToString()));
+                            var statusString = Convert.ToInt16(rdr[6].ToString()) == 0 ? "NOTCONNECTED" : "CONNECTED";
+
+                            AddOneDevice(rdr[1].ToString(), rdr[2].ToString(), statusString, int.Parse(rdr[5].ToString()));
                         }
                         rdr.Close();
                     }
@@ -285,7 +286,7 @@ namespace RaspberryConteiner
         /// <summary>
         /// Add new devices
         /// </summary>
-        private void AddOneDevice(string nameOfDevice, string nameOfPlatform, int maxTemp = 80)
+        private void AddOneDevice(string nameOfDevice, string nameOfPlatform, string statusDevice = "NOTCONNECTED", int maxTemp = 80)
         {
             var device = new Device
             {
@@ -296,6 +297,7 @@ namespace RaspberryConteiner
                 Margin = new Thickness(11, 20, 0, 0),
                 NameofDevice = nameOfDevice,
                 Nplatform = nameOfPlatform,
+                StatusDevice = statusDevice,
                 MaxTemp = maxTemp
             };
             Cards.Children.Add(device); // Add to the stack panel.            
@@ -588,4 +590,3 @@ namespace RaspberryConteiner
         }
     }
 }
-

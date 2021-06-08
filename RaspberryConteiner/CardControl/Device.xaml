@@ -25,21 +25,21 @@
                     <Image DockPanel.Dock="Right" Width="25" Source="UserControlImage/close.png" Stretch="Fill" MouseDown="Image_MouseDown" Margin="2.5,2.3,2.5,2.3" />
 
                     <!--Block status -->
-                    <Image DockPanel.Dock="Left" x:Name="StatusImage" Source="UserControlImage/cicleRed.png" Width="21" Stretch="Fill" Margin="5,5,0,4.6"/>
-                    <Label DockPanel.Dock="Left" x:Name="Status" Content="NOT CONNECTED" Foreground="#FFEBEBEB" FontSize="11" FontFamily="./#9651" Margin="0,4,0,0" />
+                    <Image DockPanel.Dock="Left" x:Name="StatusImage" Source="UserControlImage/cicleRed.png" Width="21" Stretch="Fill" Margin="5,5,0,4.6" VerticalAlignment="Center" />
+                    <Label DockPanel.Dock="Left" x:Name="Status" Content="NOT CONNECTED" Foreground="#FFEBEBEB" FontSize="11" FontFamily="./#9651"  VerticalAlignment="Center" />
                     <TextBlock x:Name="NameDevice" Text="" HorizontalAlignment="Center"  FontFamily="./#9651" FontSize="14" Foreground="White" TextTrimming="WordEllipsis" Height="17" Margin="10,0"/>
                 </DockPanel>
                 <!-- Number platform-->
                 <DockPanel Margin="0,30,0,121">
                     <Border BorderBrush="Black"  HorizontalAlignment="Center" Background="#FF383434" CornerRadius="5" Margin="0,1,0,0">
-                    <Label x:Name="NumberDevice" Content="" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16" Foreground="White"/>
+                        <Label x:Name="NumberDevice" Content="" HorizontalAlignment="Center" VerticalAlignment="Top" FontFamily="./#9651" FontSize="16" Foreground="White"/>
                     </Border>
                 </DockPanel>
 
                 <!-- Block(middle) Current temp -->
                 <Rectangle x:Name="CurrentTemp" HorizontalAlignment="Left" Height="64" Margin="125,66,0,50" VerticalAlignment="Center" Width="148" RadiusX="13" RadiusY="13" ToolTip="Current temperature">
                     <Rectangle.Fill>
-                        <SolidColorBrush Color="#FF59B032"/>
+                        <SolidColorBrush Color="LimeGreen"/>
                     </Rectangle.Fill>
                 </Rectangle>
                 <Label Content="°C" HorizontalAlignment="Left" Margin="246,64,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="./#9651" FontSize="16" Height="26"/>
@@ -72,6 +72,7 @@
 
                     </DockPanel>
                 </Grid>
+                <TextBlock x:Name="HintMax" Visibility="Hidden" HorizontalAlignment="Right" Margin="0,60,12,0" FontFamily="./#9651" TextWrapping="Wrap" Text="Enter new Max:" VerticalAlignment="Top" Foreground="Black" FontSize="14"/>
             </Grid>
         </Border>
 
@@ -104,12 +105,12 @@
         </Grid>
 
         <!--Message error connection-->
-        <Grid x:Name="ErrorCon" Visibility="Hidden" Margin="38,22,40,28">
+        <Grid x:Name="ErrorCon" Visibility="Hidden" Margin="38,10,40,28">
             <Border x:Name="Bord" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="3" />
 
-            <TextBlock x:Name="Titlee" Text="Error connection, check your device." HorizontalAlignment="Center"  Padding="7" FontFamily="./#9651" FontSize="22"  Foreground="Black" TextWrapping="Wrap" />
-
-            <Button x:Name="BtnOkk" Content="Ok"  HorizontalAlignment="Center" Height="25"   BorderBrush="Black" Background="#FF25BED4" BorderThickness="1"  Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Margin="0,92,0,13" Width="60" Click="BtnOkk_Click" />
+            <TextBlock x:Name="Titlee" Text="Error connection, check your device." TextAlignment="Center" Padding="7" FontFamily="./#9651" FontSize="22"  Foreground="Black" TextWrapping="Wrap" Margin="10,0,10,73" Width="302" />
+            <Image Source="UserControlImage/triangle.png" Width="30" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="147,61,0,0"/>
+            <Button x:Name="BtnOkk" Content="Ok"  HorizontalAlignment="Center" Height="25"   BorderBrush="Black" Background="#FF25BED4" BorderThickness="1"  Foreground="White" FontFamily="Segoe UI Semibold" FontSize="16" Margin="131,109,131,8" Width="60" Click="BtnOkk_Click" />
         </Grid>
 
     </Grid>

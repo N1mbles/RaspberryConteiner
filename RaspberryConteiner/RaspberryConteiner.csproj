@@ -330,5 +330,8 @@
   <ItemGroup>
     <Resource Include="Image\wifi.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="CardControl\UserControlImage\triangle.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

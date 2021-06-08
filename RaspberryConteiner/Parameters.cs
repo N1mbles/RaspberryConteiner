@@ -31,10 +31,10 @@
         }
 
         #region ColorBack
-        public static int Green = 0;
-        public static int Yellow = 90;
-        public static int RedStart = 95;
-        public static int RedEnd = 100;
+        public static double Green = 0;
+        public static double Orange = 88.0;
+        public static double RedStart = 95.0;
+        public static double RedEnd = 100.0;
         #endregion
 
         #region UsersSettings
